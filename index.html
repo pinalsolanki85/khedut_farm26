@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ખેડૂત મિત્ર - આંતરોલ પ્રાથમિક શાળા</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        body { background-color: #eef7f2; color: #2d3748; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 15px; }
+        
+        .header-card { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; width: 100%; max-width: 500px; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-bottom: 15px; }
+        .school-name { font-size: 1.3rem; font-weight: bold; margin-bottom: 4px; }
+        .school-location { font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 8px; }
+        .project-title { font-size: 1.3rem; font-weight: bold; color: #ffe082; }
+
+        /* ક્રેડિટ્સ બાર CSS */
+        .credits-bar {
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .credits-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .mentor-card {
+            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
+            border: 1px solid #00897b;
+            box-shadow: 0 2px 6px rgba(0, 137, 123, 0.12);
+        }
+
+        .mentor-badge {
+            background-color: #00695c;
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .mentor-name {
+            color: #004d40;
+            font-size: 1.05rem;
+            font-weight: 800;
+        }
+
+        .students-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .student-card {
+            background-color: #f1f8e9;
+            border: 1px solid #c8e6c9;
+        }
+
+        .student-badge {
+            background-color: #2e7d32;
+            color: #ffffff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.82rem;
+        }
+
+        .student-name {
+            color: #1b5e20;
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); width: 100%; max-width: 500px; padding: 20px; text-align: center; }
+
+        .button-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .btn { flex: 1; background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; border: none; padding: 12px 15px; font-size: 0.95rem; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); }
+        .btn-secondary { background: linear-gradient(135deg, #00897b, #004d40); }
+        .btn-more { background: linear-gradient(135deg, #ff9800, #e65100); width: 100%; margin-top: 12px; display: none; }
+
+        #video-container, #image-container { display: flex; justify-content: center; align-items: center; margin-bottom: 15px; }
+        #webcam-video, #preview-img { border-radius: 12px; border: 3px solid #81c784; max-width: 100%; height: auto; max-height: 260px; object-fit: cover; }
+
+        .results-title { font-weight: bold; color: #1b5e20; margin-bottom: 10px; text-align: left; font-size: 1.05rem; }
+        .prediction-badge { background-color: #f1f8e9; border-left: 5px solid #4caf50; padding: 10px; border-radius: 8px; margin-bottom: 8px; text-align: left; }
+        .label-text { display: flex; justify-content: space-between; font-weight: bold; color: #2e7d32; margin-bottom: 4px; }
+        .progress-bar-bg { background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden; }
+        .progress-bar-fill { background: #4caf50; height: 100%; width: 0%; transition: width 0.3s ease; }
+
+        .info-card { margin-top: 15px; padding: 12px; border-radius: 10px; text-align: left; display: none; }
+        .treatment-card { background: #e8f5e9; border: 1px solid #c8e6c9; }
+        .prevention-card { background: #e0f2f1; border: 1px solid #b2dfdb; }
+        .info-title { font-weight: bold; color: #1b5e20; margin-bottom: 5px; }
+        .info-text { font-size: 0.9rem; color: #37474f; line-height: 1.4; }
+
+        /* Modal (Popup) CSS */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-card {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            position: relative;
+        }
+
+        .modal-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1b5e20;
+            border-bottom: 2px solid #a5d6a7;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-btn {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .modal-section {
+            margin-bottom: 12px;
+            background: #f9fbe7;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #827717;
+        }
+
+        .modal-section-title {
+            font-weight: bold;
+            color: #33691e;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .modal-text {
+            font-size: 0.88rem;
+            color: #263238;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        #error-log { color: #d32f2f; margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
+        .footer { margin-top: 15px; font-size: 0.85rem; color: #666; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="header-card">
+        <div class="school-name">🏫 આંતરોલ પ્રાથમિક શાળા</div>
+        <div class="school-location">તાલુકો - થરાદ, જીલ્લો - વાવ-થરાદ</div>
+        <div class="project-title">🌱 AI ખેડૂત મિત્ર (મગફળી પાક રોગ નિદાન)</div>
+    </div>
+
+    <!-- ક્રેડિટ્સ વિભાજન -->
+    <div class="credits-bar">
+        <div class="credits-section mentor-card">
+            <span class="mentor-badge">👨‍🏫 માર્ગદર્શક:</span>
+            <span class="mentor-name">પિનલકુમાર બી. સોલંકી</span>
+        </div>
+
+        <div class="students-wrapper">
+            <div class="credits-section student-card">
+                <span class="student-badge">👨‍🎓 વિદ્યાર્થી ૧:</span>
+                <span class="student-name">આરાધ્યા બી. પટેલ</span>
+            </div>
+            <div class="credits-section student-card">
+                <span class="student-badge">👨‍🎓 વિદ્યાર્થી ૨:</span>
+                <span class="student-name">મિત્તલ પી. ચૌધરી</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-card">
+        <div class="button-group">
+            <button class="btn" onclick="startCamera()">📷 કૅમેરા ચાલુ કરો</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('file-input').click()">📁 ફોટો પસંદ કરો</button>
+            <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileUpload(event)">
+        </div>
+
+        <div id="video-container">
+            <video id="webcam-video" autoplay playsinline style="display:none;"></video>
+        </div>
+        <div id="image-container">
+            <img id="preview-img" style="display:none;" alt="Uploaded Leaf">
+        </div>
+        
+        <div id="results-title" class="results-title" style="display:none;">📊 રોગનું વિશ્લેષણ (Analysis):</div>
+        <div id="label-container"></div>
+        
+        <div id="treatment-card" class="info-card treatment-card">
+            <div class="info-title">💊 ત્વરિત ઈલાજ / દવાની સલાહ:</div>
+            <div id="treatment-text" class="info-text">--</div>
+        </div>
+
+        <div id="prevention-card" class="info-card prevention-card">
+            <div class="info-title">🛡️ ભવિષ્યમાં રોગથી બચવાના આગોતરા ઉપાયો:</div>
+            <div id="prevention-text" class="info-text">--</div>
+        </div>
+
+        <!-- વધુ જાણો બટન -->
+        <button id="more-info-btn" class="btn btn-more" onclick="openModal()">ℹ️ વધુ જાણો (વિગતવાર માર્ગદર્શન)</button>
+
+        <div id="error-log"></div>
+    </div>
+
+    <!-- Popup Modal Box -->
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span id="modal-disease-title">📖 રોગ વિશે વિગતવાર માર્ગદર્શન</span>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+
+            <div class="modal-section">
+                <div class="modal-section-title">👨‍🌾 ૧. હવે પછીનું તાત્કાલિક પગલું (Action Steps):</div>
+                <div id="modal-action-text" class="modal-text">--</div>
+            </div>
+
+            <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                <div class="modal-section-title" style="color:#004d40;">🏢 ૨. કોનો સંપર્ક કરવો (Expert Advisory):</div>
+                <div id="modal-contact-text" class="modal-text">--</div>
+            </div>
+
+            <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                <div class="modal-section-title" style="color:#1b5e20;">🛡️ ૩. ભવિષ્યમાં સામનો કેવી રીતે કરવો (Future Prevention):</div>
+                <div id="modal-future-text" class="modal-text">--</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        © આંતરોલ પ્રાથમિક શાળા - ગણિત-વિજ્ઞાન અને પર્યાવરણ પ્રદર્શન
+    </div>
+
+    <script>
+        const URL = "./my_model/";
+        let model, labelContainer, maxPredictions;
+        let videoElement = document.getElementById("webcam-video");
+        let isCameraActive = false;
+        let currentTopClass = "";
+
+        const diseaseData = {
+            "Healthy Leaf": {
+                treatment: "પાક સંપૂર્ણપણે સ્વસ્થ છે! કોઈ દવાની જરૂર નથી.",
+                prevention: "• યોગ્ય સમયે જમીનમાં પૂરતો ભેજ જાળવવો.\n• સમતોલ ખાતર (NPK) નો જ ઉપયોગ કરવો.",
+                action: "• હાલ કોઈ રાસાયણિક છંટકાવની જરૂર નથી.\n• દર ૩-૪ દિવસે ખેતરનું નિરીક્ષણ ચાલુ રાખો.",
+                contact: "• નિયમિત માર્ગદર્શન માટે સ્થાનિક ગ્રામ સેવક અથવા કૃષિ સભાસદનો સંપર્ક કરવો.",
+                future: "• જમીનની ફળદ્રુપતા વધારવા માટે દેશી છાણિયું ખાતર વાપરવું.\n• પાકને યોગ્ય સમયે જૈવિક ખાતર આપવું."
+            },
+            "Healthy": {
+                treatment: "પાક સંપૂર્ણપણે સ્વસ્થ છે! કોઈ દવાની જરૂર નથી.",
+                prevention: "• યોગ્ય સમયે જમીનમાં પૂરતો ભેજ જાળવવો.",
+                action: "• હાલ કોઈ રાસાયણિક છંટકાવની જરૂર નથી.",
+                contact: "• નિયમિત માર્ગદર્શન માટે કિસાન કૉલ સેન્ટર (1800-180-1551) નો સંપર્ક કરવો.",
+                future: "• સમતોલ ખાતર અને યોગ્ય પિયત આપવું."
+            },
+            "Tikka Disease": {
+                treatment: "મેન્કોઝેબ ૭૫% WP (૨૭ ગ્રામ) અથવા કાર્બેન્ડાઝીમ (૧૦ ગ્રામ) ૧૦ લીટર પાણીમાં ભેળવી છંટકાવ કરવો.",
+                prevention: "• વાવણી પહેલાં બિયારણને દવાની પટ આપવી (Seed Treatment).\n• પાકની ફેરબદલી (Crop Rotation) કરવી.",
+                action: "• રોગગ્રસ્ત નીચેના પાંદડા તોડીને ખેતર બહાર દૂર સળગાવી દેવા.\n• ભેજવાળા વાતાવરણમાં છંટકાવ વહેલી સવારે અથવા સાંજે કરવો.",
+                contact: "• નજીકના તાલુકા 'કૃષિ સેવા કેન્દ્ર' અથવા 'કૃષિ યુનિવર્સિટી વિજ્ઞાન કેન્દ્ર' નો સંપર્ક કરવો.\n• કિસાન કૉલ સેન્ટર: 1800-180-1551 (Toll Free)",
+                future: "• આગામી સીઝનમાં વાવણી પહેલાં બીજને ટ્રાઇકોડર્મા (૪ ગ્રામ/કિલો) ની પટ અચૂક આપવી.\n• એક જ ખેતરમાં સતત મગફળી ન વાવતા પાકની ફેરબદલી કરવી."
+            },
+            "Rust Disease": {
+                treatment: "ગેરુના નિયંત્રણ માટે ટેબુકોનાઝોલ કે હેક્ઝાકોનાઝોલ દવાનો છંટકાવ કરવો.",
+                prevention: "• રોગ પ્રતિકારક જાતોનું વાવેતર કરવું.\n• બે છોડ વચ્ચે યોગ્ય અંતર રાખવું.",
+                action: "• પાકમાં વધુ પડતો યુરિયા (નાઇટ્રોજન) ખાતરનો ઉપયોગ ત્વરિત અટકાવવો.\n• દવામાં સ્ટીકર (Wetting Agent) ઉમેરીને જ છંટકાવ કરવો.",
+                contact: "• તમારા વિસ્તારના વિસ્તરણ અધિકારી (કૃષિ) અથવા વિસ્તૃત કૃષિ સલાહકારનો સંપર્ક કરવો.",
+                future: "• ભવિષ્યમાં 'GG-20' કે 'GG-2' જેવી રોગ પ્રતિકારક જાતો પસંદ કરવી.\n• બે હરોળ વચ્ચે પૂરતી જગ્યા રાખવી જેથી હવા-ઉજાસ મળી રહે."
+            },
+            "Alternaria Blight": {
+                treatment: "કોપર ઓક્સીક્લોરાઇડ ૫૦% WP દવાનો છંટકાવ કરવો.",
+                prevention: "• પાક પર વધુ પડતો નાઇટ્રોજન (યુરિયા) ખાતરનો ઉપયોગ ન કરવો.",
+                action: "• ખેતરમાં પાણી ભરાઈ રહેતું હોય તો નિતારની તાત્કાલિક વ્યવસ્થા કરવી.\n• રોગગ્રસ્ત છોડ પર દવાનો છંટકાવ કરવો.",
+                contact: "• નજીકના જંતુનાશક દવા વિક્રેતા અને કૃષિ સુપરવાઈઝરની સલાહ લેવી.",
+                future: "• જમીનની યોગ્ય ખેડ કરવી અને વાવણી સમયે જૈવિક ખાતરોનો વધુ ઉપયોગ કરવો."
+            },
+            "Default": {
+                treatment: "પાકનું નિરીક્ષણ કરી યોગ્ય જંતુનાશક વાપરવી.",
+                prevention: "નિયમિતપણે ખેતરની મુલાકાત લઈ નિષ્ણાતની સલાહ લેવી.",
+                action: "• પાકના તાજા લક્ષણોવાળા પાંદડા લઈ નિષ્ણાતને બતાવવા.",
+                contact: "• કિસાન કૉલ સેન્ટર ટોલ ફ્રી નંબર: 1800-180-1551 પર ફોન કરી સલાહ લેવી.",
+                future: "• પાકને સમતોલ પોષણ આપવું અને ખેતરની સ્વચ્છતા જાળવવી."
+            }
+        };
+
+        async function initModel() {
+            if (!model) {
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+            }
+        }
+
+        async function startCamera() {
+            const errorDiv = document.getElementById("error-log");
+            document.getElementById("preview-img").style.display = "none";
+            errorDiv.innerHTML = "";
+
+            try {
+                await initModel();
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: { exact: "environment" } }
+                }).catch(async () => {
+                    return await navigator.mediaDevices.getUserMedia({ video: true });
+                });
+
+                videoElement.srcObject = stream;
+                videoElement.style.display = "block";
+                isCameraActive = true;
+
+                setupUI();
+                videoElement.onloadedmetadata = () => {
+                    predictLoop();
+                };
+            } catch (err) {
+                console.error(err);
+                errorDiv.innerHTML = "કૅમેરા શરુ ન થઈ શક્યો. લિંક <b>HTTPS</b> વાળી છે કે નહીં ચકાસો અથવા બીજી બધી એપ બંધ કરી પ્રયાસ કરો.";
+            }
+        }
+
+        async function predictLoop() {
+            if (isCameraActive && videoElement.readyState === 4) {
+                await predict(videoElement);
+                requestAnimationFrame(predictLoop);
+            }
+        }
+
+        async function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            isCameraActive = false;
+            if (videoElement.srcObject) {
+                videoElement.srcObject.getTracks().forEach(track => track.stop());
+            }
+            videoElement.style.display = "none";
+
+            const imgElement = document.getElementById("preview-img");
+            imgElement.src = window.URL.createObjectURL(file);
+            imgElement.style.display = "block";
+
+            imgElement.onload = async function() {
+                await initModel();
+                setupUI();
+                await predict(imgElement);
+            };
+        }
+
+        function setupUI() {
+            document.getElementById("results-title").style.display = "block";
+            labelContainer = document.getElementById("label-container");
+            labelContainer.innerHTML = "";
+            
+            for (let i = 0; i < maxPredictions; i++) {
+                const badge = document.createElement("div");
+                badge.className = "prediction-badge";
+                badge.innerHTML = `
+                    <div class="label-text">
+                        <span class="class-name">--</span>
+                        <span class="class-pct">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                `;
+                labelContainer.appendChild(badge);
+            }
+        }
+
+        async function predict(imageSource) {
+            const prediction = await model.predict(imageSource);
+            let topClass = "";
+            let highestProb = 0;
+
+            for (let i = 0; i < maxPredictions; i++) {
+                const className = prediction[i].className;
+                const prob = prediction[i].probability;
+                const percentage = (prob * 100).toFixed(0) + "%";
+                
+                const badge = labelContainer.childNodes[i];
+                if (badge) {
+                    badge.querySelector(".class-name").innerText = className;
+                    badge.querySelector(".class-pct").innerText = percentage;
+                    badge.querySelector(".progress-bar-fill").style.width = percentage;
+                }
+
+                if (prob > highestProb) {
+                    highestProb = prob;
+                    topClass = className;
+                }
+            }
+
+            currentTopClass = topClass;
+
+            const treatmentCard = document.getElementById("treatment-card");
+            const preventionCard = document.getElementById("prevention-card");
+            const moreBtn = document.getElementById("more-info-btn");
+
+            treatmentCard.style.display = "block";
+            preventionCard.style.display = "block";
+            moreBtn.style.display = "block";
+
+            const data = diseaseData[topClass] || diseaseData["Tikka Disease"] || diseaseData["Default"];
+            document.getElementById("treatment-text").innerText = data.treatment;
+            document.getElementById("prevention-text").innerText = data.prevention;
+        }
+
+        /* Modal (Popup) Functions */
+        function openModal() {
+            const data = diseaseData[currentTopClass] || diseaseData["Tikka Disease"] || diseaseData["Default"];
+            document.getElementById("modal-disease-title").innerText = "📖 " + (currentTopClass || "પાક રોગ") + " - વિગતવાર માર્ગદર્શન";
+            document.getElementById("modal-action-text").innerText = data.action || data.prevention;
+            document.getElementById("modal-contact-text").innerText = data.contact || "• કિસાન કૉલ સેન્ટર: 1800-180-1551 પર સંપર્ક કરો.";
+            document.getElementById("modal-future-text").innerText = data.future || data.prevention;
+
+            document.getElementById("info-modal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("info-modal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
