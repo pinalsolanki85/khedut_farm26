@@ -425,7 +425,7 @@
             }
         }
 
-        async function predict(imageSource) {
+       async function predict(imageSource) {
             const prediction = await model.predict(imageSource);
             let topClass = "";
             let highestProb = 0;
@@ -454,12 +454,30 @@
             const preventionCard = document.getElementById("prevention-card");
             const moreBtn = document.getElementById("more-info-btn");
 
-            treatmentCard.style.display = "block";
+            // ડેટા મેળવો (જો નામ ન મળે તો જ Default વાપરવું)
+            const data = diseaseData[topClass] || diseaseData["Default"];
+
+            // 🔥 અહીં લોજિક સુધારેલું છે: જો Healthy પાન હોય તો દવાની જરૂર નથી
+            if (topClass.toLowerCase().includes("healthy")) {
+                treatmentCard.style.display = "block";
+                treatmentCard.style.backgroundColor = "#e8f5e9"; // લીલો કલર
+                treatmentCard.style.border = "1px solid #a5d6a7";
+                
+                // ટાઈટલ અને મેસેજ બદલો
+                treatmentCard.querySelector(".info-title").innerText = "✅ પાકની વર્તમાન સ્થિતિ:";
+                document.getElementById("treatment-text").innerText = "પાક સંપૂર્ણપણે સ્વસ્થ છે! કોઈ પણ પ્રકારની રાસાયણિક દવાની જરૂર નથી.";
+            } else {
+                treatmentCard.style.display = "block";
+                treatmentCard.style.backgroundColor = "#fff3e0"; // હળવો ઓરેન્જ/રેડ કલર રોગ માટે
+                treatmentCard.style.border = "1px solid #ffe0b2";
+                
+                treatmentCard.querySelector(".info-title").innerText = "💊 ત્વરિત ઈલાજ / દવાની સલાહ:";
+                document.getElementById("treatment-text").innerText = data.treatment;
+            }
+
             preventionCard.style.display = "block";
             moreBtn.style.display = "block";
 
-            const data = diseaseData[topClass] || diseaseData["Tikka Disease"] || diseaseData["Default"];
-            document.getElementById("treatment-text").innerText = data.treatment;
             document.getElementById("prevention-text").innerText = data.prevention;
         }
 
