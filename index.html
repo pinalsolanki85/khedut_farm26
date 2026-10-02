@@ -11,139 +11,53 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
         body { background-color: #eef7f2; color: #2d3748; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 15px; }
         
-        .header-card { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; width: 100%; max-width: 500px; padding: 20px; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-bottom: 15px; position: relative; }
-        .school-name { font-size: 1.3rem; font-weight: bold; margin-bottom: 4px; }
-        .school-location { font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 8px; }
-        .project-title { font-size: 1.3rem; font-weight: bold; color: #ffe082; }
+        .header-card { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; width: 100%; max-width: 500px; padding: 18px; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-bottom: 12px; }
+        .school-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 4px; }
+        .school-location { font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 6px; }
+        .project-title { font-size: 1.2rem; font-weight: bold; color: #ffe082; }
 
-        .lang-select-box {
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: flex-end;
-            width: 100%;
-            max-width: 500px;
-        }
-        .lang-select {
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 2px solid #2e7d32;
-            font-weight: bold;
-            background: #ffffff;
-            color: #1b5e20;
-            cursor: pointer;
-            outline: none;
-        }
+        .lang-select-box { margin-bottom: 10px; display: flex; justify-content: flex-end; width: 100%; max-width: 500px; }
+        .lang-select { padding: 6px 12px; border-radius: 8px; border: 2px solid #2e7d32; font-weight: bold; background: #ffffff; color: #1b5e20; cursor: pointer; outline: none; }
 
-        .credits-bar {
-            background: #ffffff;
-            width: 100%;
-            max-width: 500px;
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 15px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            border: 1px solid #e2e8f0;
-        }
+        .credits-bar { background: #ffffff; width: 100%; max-width: 500px; border-radius: 14px; padding: 10px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; gap: 6px; border: 1px solid #e2e8f0; }
+        .credits-section { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 8px; }
+        .mentor-card { background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%); border: 1px solid #00897b; }
+        .mentor-badge { background-color: #00695c; color: #ffffff; padding: 4px 8px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
+        .mentor-name { color: #004d40; font-size: 0.95rem; font-weight: 800; }
+        .students-wrapper { display: flex; flex-direction: column; gap: 6px; }
+        .student-card { background-color: #f1f8e9; border: 1px solid #c8e6c9; }
+        .student-badge { background-color: #2e7d32; color: #ffffff; padding: 3px 6px; border-radius: 6px; font-weight: 700; font-size: 0.78rem; }
+        .student-name { color: #1b5e20; font-size: 0.9rem; font-weight: 800; }
 
-        .credits-section {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
+        /* 🔘 Menu Buttons Bar */
+        .menu-bar { display: flex; gap: 6px; width: 100%; max-width: 500px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
+        .menu-btn { flex: 1; min-width: 75px; padding: 8px 5px; font-size: 0.8rem; font-weight: bold; border: 1px solid #2e7d32; background: #ffffff; color: #2e7d32; border-radius: 10px; cursor: pointer; text-align: center; white-space: nowrap; transition: 0.2s; }
+        .menu-btn.active { background: #2e7d32; color: white; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); }
 
-        .mentor-card {
-            background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);
-            border: 1px solid #00897b;
-            box-shadow: 0 2px 6px rgba(0, 137, 123, 0.12);
-        }
+        .tab-content { display: none; width: 100%; max-width: 500px; }
+        .tab-content.active { display: block; }
 
-        .mentor-badge {
-            background-color: #00695c;
-            color: #ffffff;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
+        .feature-card { background: #ffffff; border-radius: 14px; width: 100%; max-width: 500px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; text-align: left; }
+        .feature-title { font-weight: bold; color: #1b5e20; margin-bottom: 8px; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
 
-        .mentor-name {
-            color: #004d40;
-            font-size: 1.05rem;
-            font-weight: 800;
-        }
+        .news-badge { background-color: #e3f2fd; border-left: 4px solid #1976d2; padding: 8px; margin-top: 6px; border-radius: 4px; font-size: 0.85rem; color: #0d47a1; }
 
-        .students-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .calc-input-group { display: flex; gap: 6px; margin-top: 8px; }
+        .calc-input, .dropdown-select { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.92rem; }
 
-        .student-card {
-            background-color: #f1f8e9;
-            border: 1px solid #c8e6c9;
-        }
+        .btn-mic { background: #0288d1; color: white; border: none; padding: 0 12px; border-radius: 6px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        .student-badge {
-            background-color: #2e7d32;
-            color: #ffffff;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.82rem;
-        }
-
-        .student-name {
-            color: #1b5e20;
-            font-size: 0.95rem;
-            font-weight: 800;
-        }
-
-        .feature-card {
-            background: #ffffff;
-            border-radius: 14px;
-            width: 100%;
-            max-width: 500px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
-            text-align: left;
-        }
-        .feature-title {
-            font-weight: bold;
-            color: #1b5e20;
-            margin-bottom: 8px;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .calc-input-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        .calc-input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); width: 100%; max-width: 500px; padding: 20px; text-align: center; }
-
+        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); width: 100%; max-width: 500px; padding: 20px; text-align: center; margin-bottom: 15px; }
         .button-group { display: flex; gap: 10px; margin-bottom: 15px; }
-        .btn { flex: 1; background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; border: none; padding: 12px 15px; font-size: 0.95rem; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); }
+        .btn { flex: 1; background: linear-gradient(135deg, #4caf50, #2e7d32); color: white; border: none; padding: 12px 15px; font-size: 0.95rem; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); text-decoration: none; display: inline-block; text-align: center;}
         .btn-secondary { background: linear-gradient(135deg, #00897b, #004d40); }
         .btn-voice { background: linear-gradient(135deg, #0288d1, #01579b); width: 100%; margin-top: 10px; display: none; }
         .btn-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); width: 100%; margin-top: 10px; display: none; }
         .btn-more { background: linear-gradient(135deg, #ff9800, #e65100); width: 100%; margin-top: 12px; display: none; }
+        .btn-ikhedut { background: linear-gradient(135deg, #e65100, #bf360c); color: white; margin-top: 10px; width: 100%; font-size: 0.95rem; }
+        .btn-google { background: linear-gradient(135deg, #4285f4, #1a73e8); color: white; margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; }
+        .btn-youtube { background: linear-gradient(135deg, #ff0000, #cc0000); color: white; margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; }
+        .btn-call { background: linear-gradient(135deg, #34a853, #1e8e3e); color: white; margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; text-decoration: none; display: inline-block; }
 
         #video-container, #image-container { display: flex; justify-content: center; align-items: center; margin-bottom: 15px; }
         #webcam-video, #preview-img { border-radius: 12px; border: 3px solid #81c784; max-width: 100%; height: auto; max-height: 260px; object-fit: cover; }
@@ -160,74 +74,26 @@
         .info-title { font-weight: bold; color: #1b5e20; margin-bottom: 5px; }
         .info-text { font-size: 0.9rem; color: #37474f; line-height: 1.4; }
 
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
+        /* Rates Table */
+        .rate-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.88rem; }
+        .rate-table th, .rate-table td { border: 1px solid #c8e6c9; padding: 8px; text-align: left; }
+        .rate-table th { background-color: #e8f5e9; color: #1b5e20; }
 
-        .modal-card {
-            background: #ffffff;
-            border-radius: 16px;
-            max-width: 480px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            text-align: left;
-            position: relative;
-        }
+        .scheme-item { background: #f9fbe7; border-left: 4px solid #827717; padding: 10px; margin-top: 8px; border-radius: 6px; }
+        .scheme-title { font-weight: bold; color: #33691e; }
+        .scheme-desc { font-size: 0.85rem; color: #424242; margin-top: 3px; }
 
-        .modal-header {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #1b5e20;
-            border-bottom: 2px solid #a5d6a7;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        /* Crop Calendar Box */
+        .crop-season { background: #f1f8e9; border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid #c8e6c9; }
+        .crop-season-title { font-weight: bold; color: #2e7d32; font-size: 0.95rem; }
 
-        .close-btn {
-            background: #d32f2f;
-            color: white;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .modal-section {
-            margin-bottom: 12px;
-            background: #f9fbe7;
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 4px solid #827717;
-        }
-
-        .modal-section-title {
-            font-weight: bold;
-            color: #33691e;
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }
-
-        .modal-text {
-            font-size: 0.88rem;
-            color: #263238;
-            line-height: 1.5;
-            white-space: pre-line;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-card { background: #ffffff; border-radius: 16px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); text-align: left; }
+        .modal-header { font-size: 1.2rem; font-weight: bold; color: #1b5e20; border-bottom: 2px solid #a5d6a7; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .close-btn { background: #d32f2f; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer; }
+        .modal-section { margin-bottom: 12px; background: #f9fbe7; padding: 10px; border-radius: 8px; border-left: 4px solid #827717; }
+        .modal-section-title { font-weight: bold; color: #33691e; font-size: 0.95rem; margin-bottom: 4px; }
+        .modal-text { font-size: 0.88rem; color: #263238; line-height: 1.5; white-space: pre-line; }
 
         #error-log { color: #d32f2f; margin-top: 10px; font-weight: bold; font-size: 0.9rem; word-break: break-all; }
         .footer { margin-top: 15px; font-size: 0.85rem; color: #666; text-align: center; }
@@ -267,59 +133,177 @@
         </div>
     </div>
 
-    <div class="feature-card">
-        <div class="feature-title">☀️ <span id="txt-weather-title">હવામાન અને પાક સલાહ (Weather Advisory)</span></div>
-        <div style="font-size: 0.9rem; color: #444;" id="weather-info">
-            <span id="txt-weather-stats">🌡️ તાપમાન: <b>31°C</b> | 💧 ભેજ: <b>78%</b></span><br>
-            ⚠️ <span id="weather-alert" style="color: #c62828; font-weight: bold;">હવામાનમાં વધુ ભેજ હોવાથી 'ટિક્કા' અથવા 'ફૂગ' નો રોગ ફેલાવાની શક્યતા વધુ છે.</span>
+    <!-- 🔘 Menu Buttons Bar -->
+    <div class="menu-bar">
+        <button class="menu-btn active" onclick="switchTab('home-tab', this)">🔍 સ્કેન</button>
+        <button class="menu-btn" onclick="switchTab('calendar-tab', this)">🗓️ કેલેન્ડર</button>
+        <button class="menu-btn" onclick="switchTab('apmc-tab', this)">📊 બજાર ભાવ</button>
+        <button class="menu-btn" onclick="switchTab('yojna-tab', this)">🏛️ યોજનાઓ</button>
+        <button class="menu-btn" onclick="switchTab('calc-tab', this)">🧪 ખાતર</button>
+        <button class="menu-btn" onclick="switchTab('advisor-tab', this)">💬 સલાહ</button>
+    </div>
+
+    <!-- 1️⃣ HOME TAB (Scan First, Weather & Live News Alerts Below) -->
+    <div id="home-tab" class="tab-content active">
+        <!-- Main Photo Scan Card (મુખ્ય ભાગ સૌથી ઉપર) -->
+        <div class="main-card">
+            <div class="button-group">
+                <button class="btn" onclick="startCamera()" id="txt-btn-cam">📷 કૅમેરા ચાલુ કરો</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('file-input').click()" id="txt-btn-file">📁 ફોટો પસંદ કરો</button>
+                <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileUpload(event)">
+            </div>
+
+            <div id="video-container">
+                <video id="webcam-video" autoplay playsinline style="display:none;"></video>
+            </div>
+            <div id="image-container">
+                <img id="preview-img" style="display:none;" alt="Uploaded Leaf">
+            </div>
+            
+            <div id="results-title" class="results-title" style="display:none;"><span id="txt-analysis-title">📊 રોગનું વિશ્લેષણ (Analysis):</span></div>
+            <div id="label-container"></div>
+
+            <button id="voice-btn" class="btn btn-voice" onclick="speakAnalysis()">🔊 <span id="txt-voice-btn">માર્ગદર્શન સાંભળો (Voice Assistant)</span></button>
+            <button id="whatsapp-btn" class="btn btn-whatsapp" onclick="shareOnWhatsApp()">📲 <span id="txt-wa-btn">વોટ્સએપ પર રિપોર્ટ મોકલો</span></button>
+
+            <div id="treatment-card" class="info-card treatment-card">
+                <div class="info-title" id="txt-treatment-title">💊 ત્વરિત ઈલાજ / દવાની સલાહ:</div>
+                <div id="treatment-text" class="info-text">--</div>
+            </div>
+
+            <div id="prevention-card" class="info-card prevention-card">
+                <div class="info-title" id="txt-prevention-title">🛡️ ભવિષ્યમાં રોગથી બચવાના આગોતરા ઉપાયો:</div>
+                <div id="prevention-text" class="info-text">--</div>
+            </div>
+
+            <button id="more-info-btn" class="btn btn-more" onclick="openModal()">ℹ️ <span id="txt-more-btn">વધુ જાણો (વિગતવાર માર્ગદર્શન)</span></button>
+
+            <div id="error-log"></div>
+        </div>
+
+        <!-- Live News Alert Box (સ્કેનની નીચે) -->
+        <div class="feature-card">
+            <div class="feature-title">📰 <span id="txt-news-title">તાજા કૃષિ સમાચાર (Agri News Alert)</span></div>
+            <div class="news-badge">
+                📢 <b>હવામાન એલર્ટ:</b> ઉત્તર ગુજરાતમાં આગામી ૪૮ કલાકમાં હળવા ઝાપટાંની શક્યતા. વાવણી લાયક વરસાદ બાદ જ બિયારણ વાવવું.
+            </div>
+            <div class="news-badge" style="background-color:#fff3e0; border-left-color:#f57c00; color:#e65100;">
+                🚨 <b>રોગ સાવચેતી:</b> ભેજવાળા હવામાનને કારણે મગફળીમાં 'ટિક્કા' રોગનો ઉપદ્રવ વધવાની શક્યતા. પૂર્વ તૈયારી રૂપે ફૂગનાશકનો છંટકાવ કરવો.
+            </div>
+        </div>
+
+        <!-- Live Weather Advisory (સ્કેનની નીચે) -->
+        <div class="feature-card">
+            <div class="feature-title">☀️ <span id="txt-weather-title">હવામાન સલાહ (Live Weather)</span></div>
+            <div style="font-size: 0.9rem; color: #444;" id="weather-info">
+                <span id="txt-weather-stats">🌡️ તાપમાન: <b>31°C</b> | 💧 ભેજ: <b>78%</b></span><br>
+                ⚠️ <span id="weather-alert" style="color: #c62828; font-weight: bold;">હવામાનમાં વધુ ભેજ હોવાથી 'ટિક્કા' અથવા 'ફૂગ' નો રોગ ફેલાવાની શક્યતા વધુ છે.</span>
+            </div>
         </div>
     </div>
 
-    <div class="feature-card">
-        <div class="feature-title">🧪 <span id="txt-calc-title">ખાતર કેલ્ક્યુલેટર (Fertilizer Calculator)</span></div>
-        <div style="font-size: 0.85rem; color: #555;" id="txt-calc-desc">તમારા ખેતરનું ક્ષેત્રફળ (વીઘામાં) નાખો:</div>
-        <div class="calc-input-group">
-            <input type="number" id="vigha-input" class="calc-input" placeholder="ઉદા. 2" min="1">
-            <button class="btn" style="padding: 6px 12px;" onclick="calculateFertilizer()" id="txt-calc-btn">ગણતરી કરો</button>
+    <!-- 2️⃣ CROP CALENDAR TAB -->
+    <div id="calendar-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">🗓️ <span>વાવણી કેલેન્ડર અને પાક માર્ગદર્શિકા (Crop Calendar)</span></div>
+            
+            <div class="crop-season">
+                <div class="crop-season-title">🌧️ ૧. ચોમાસું પાક (ખરીફ સીઝન - જૂન થી ઓક્ટોબર)</div>
+                <div style="font-size:0.85rem; color:#444; margin-top:4px;">
+                    • <b>મુખ્ય પાકો:</b> મગફળી, કપાસ, બાજરી, તલ, ગુવાર, મગ.<br>
+                    • <b>કેર/સંભાળ:</b> વાવણી પહેલાં બીજને ટ્રાઇકોડર્માનો પટ આપવો. ૧૫ થી ૨૦ દિવસે નીંદણમુક્ત ખેતર રાખવું.
+                </div>
+            </div>
+
+            <div class="crop-season" style="background:#e0f2f1; border-color:#80cbc4;">
+                <div class="crop-season-title" style="color:#00695c;">❄️ ૨. શિયાળુ પાક (રવિ સીઝન - નવેમ્બર થી ફેબ્રુઆરી)</div>
+                <div style="font-size:0.85rem; color:#444; margin-top:4px;">
+                    • <b>મુખ્ય પાકો:</b> રાયડો, જીરું, ઘઉં, બટાટા, ચણા, વરિયાળી.<br>
+                    • <b>કેર/સંભાળ:</b> જીરું અને રાયડામાં ચરમી/કાળિયા રોગ સામે આગોતરો ફૂગનાશકનો છંટકાવ કરવો.
+                </div>
+            </div>
+
+            <div class="crop-season" style="background:#fffde7; border-color:#fff59d;">
+                <div class="crop-season-title" style="color:#f57f17;">☀️ ૩. ઉનાળુ પાક (જાયદ સીઝન - માર્ચ થી મે)</div>
+                <div style="font-size:0.85rem; color:#444; margin-top:4px;">
+                    • <b>મુખ્ય પાકો:</b> ઉનાળુ મગફળી, બાજરી, તલ, શાકભાજી.<br>
+                    • <b>કેર/સંભાળ:</b> પૂરતા પ્રમાણમાં પિયત આપવું અને ચુસિયા જીવાતો સામે ચીકાશ પર ધ્યાન આપવું.
+                </div>
+            </div>
         </div>
-        <div id="calc-result" style="margin-top: 8px; font-size: 0.88rem; font-weight: bold; color: #1b5e20;"></div>
     </div>
 
-    <div class="main-card">
-        <div class="button-group">
-            <button class="btn" onclick="startCamera()" id="txt-btn-cam">📷 કૅમેરા ચાલુ કરો</button>
-            <button class="btn btn-secondary" onclick="document.getElementById('file-input').click()" id="txt-btn-file">📁 ફોટો પસંદ કરો</button>
-            <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFileUpload(event)">
+    <!-- 3️⃣ APMC MARKET RATES TAB -->
+    <div id="apmc-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">📈 <span id="txt-apmc-title">APMC લાઈવ બજાર ભાવ</span></div>
+            <div style="font-size: 0.85rem; color: #555;">તમારું માર્કેટયાર્ડ પસંદ કરો:</div>
+            <div class="calc-input-group">
+                <select id="market-select" class="dropdown-select" onchange="showMarketRates()">
+                    <option value="tharad" selected>થરાદ માર્કેટયાર્ડ (Tharad)</option>
+                    <option value="deesa">ડીસા માર્કેટયાર્ડ (Deesa)</option>
+                    <option value="vav">વાવ માર્કેટયાર્ડ (Vav)</option>
+                    <option value="palanpur">પાલનપુર માર્કેટયાર્ડ (Palanpur)</option>
+                </select>
+            </div>
+            <div id="market-rate-result"></div>
         </div>
-
-        <div id="video-container">
-            <video id="webcam-video" autoplay playsinline style="display:none;"></video>
-        </div>
-        <div id="image-container">
-            <img id="preview-img" style="display:none;" alt="Uploaded Leaf">
-        </div>
-        
-        <div id="results-title" class="results-title" style="display:none;"><span id="txt-analysis-title">📊 રોગનું વિશ્લેષણ (Analysis):</span></div>
-        <div id="label-container"></div>
-
-        <button id="voice-btn" class="btn btn-voice" onclick="speakAnalysis()">🔊 <span id="txt-voice-btn">માર્ગદર્શન સાંભળો (Voice Assistant)</span></button>
-        <button id="whatsapp-btn" class="btn btn-whatsapp" onclick="shareOnWhatsApp()">📲 <span id="txt-wa-btn">વોટ્સએપ પર રિપોર્ટ મોકલો</span></button>
-
-        <div id="treatment-card" class="info-card treatment-card">
-            <div class="info-title" id="txt-treatment-title">💊 ત્વરિત ઈલાજ / દવાની સલાહ:</div>
-            <div id="treatment-text" class="info-text">--</div>
-        </div>
-
-        <div id="prevention-card" class="info-card prevention-card">
-            <div class="info-title" id="txt-prevention-title">🛡️ ભવિષ્યમાં રોગથી બચવાના આગોતરા ઉપાયો:</div>
-            <div id="prevention-text" class="info-text">--</div>
-        </div>
-
-        <button id="more-info-btn" class="btn btn-more" onclick="openModal()">ℹ️ <span id="txt-more-btn">વધુ જાણો (વિગતવાર માર્ગદર્શન)</span></button>
-
-        <div id="error-log"></div>
     </div>
 
+    <!-- 4️⃣ YOJNA TAB -->
+    <div id="yojna-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">🏛️️ <span id="txt-yojna-title">સરકારી કૃષિ સહાય યોજનાઓ</span></div>
+            <div class="scheme-item">
+                <div class="scheme-title">૧. ટ્રેક્ટર અને સાધન સહાય યોજના</div>
+                <div class="scheme-desc">ટ્રેક્ટર અને કૃષિ સાધનોની ખરીદી પર ૪૦% થી ૫૦% સુધીની સબસીડી.</div>
+            </div>
+            <div class="scheme-item">
+                <div class="scheme-title">૨. તાર ફેન્સીંગ યોજના (ખેતરની વાડ)</div>
+                <div class="scheme-desc">જંગલી પ્રાણીઓથી પાકના રક્ષણ માટે ખેતરની ચોતરફ તારની ફેન્સીંગ માટે સહાય.</div>
+            </div>
+            <div class="scheme-item">
+                <div class="scheme-title">૩. સોલાર પંપ અને ડ્રીપ ઇરિગેશન સહાય</div>
+                <div class="scheme-desc">ટપક સિંચાઈ પદ્ધતિ અને સૌર ઊર્જા આધારિત પંપ માટે ૭૫% સુધી સબસીડી.</div>
+            </div>
+            
+            <a href="https://ikhedut.gujarat.gov.in/" target="_blank" class="btn btn-ikhedut">
+                🔗 i-Khedut Portal પર ઓનલાઈન અરજી કરો
+            </a>
+        </div>
+    </div>
+
+    <!-- 5️⃣ FERTILIZER CALC TAB -->
+    <div id="calc-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">🧪 <span id="txt-calc-title">ખાતર કેલ્ક્યુલેટર (Fertilizer Calculator)</span></div>
+            <div style="font-size: 0.85rem; color: #555;" id="txt-calc-desc">તમારા ખેતરનું ક્ષેત્રફળ (વીઘામાં) નાખો:</div>
+            <div class="calc-input-group">
+                <input type="number" id="vigha-input" class="calc-input" placeholder="ઉદા. 2" min="1">
+                <button class="btn" style="padding: 6px 12px;" onclick="calculateFertilizer()" id="txt-calc-btn">ગણતરી કરો</button>
+            </div>
+            <div id="calc-result" style="margin-top: 10px; font-size: 0.9rem; font-weight: bold; color: #1b5e20;"></div>
+        </div>
+    </div>
+
+    <!-- 6️⃣ ADVISOR TAB (ENHANCED VOICE & SEARCH ADVISORY WITH GOOGLE & YOUTUBE) -->
+    <div id="advisor-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">💬 <span id="txt-advisor-title">સ્માર્ટ કૃષિ હેલ્પલાઇન (Voice & Search Advisory)</span></div>
+            <div style="font-size: 0.85rem; color: #555;">તમારો પ્રશ્ન બોલીને અથવા ટાઈપ કરીને શોધો:</div>
+            
+            <div class="calc-input-group">
+                <input type="text" id="query-input" class="calc-input" placeholder="ઉદા. મગફળીમાં પીળા પાંદડા થાય છે...">
+                <button class="btn-mic" onclick="startVoiceRecognition()" title="બોલીને શોધો">🎙️</button>
+                <button class="btn" style="padding: 6px 12px;" onclick="getAgriAdvice()">શોધો</button>
+            </div>
+            <div id="voice-status" style="font-size:0.8rem; color:#0288d1; margin-top:4px;"></div>
+            
+            <div id="query-result" style="margin-top: 12px; font-size: 0.9rem; color: #1b5e20; border-top: 1px dashed #ccc; padding-top: 10px;"></div>
+        </div>
+    </div>
+
+    <!-- Modal for Detailed Info -->
     <div id="info-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
@@ -356,6 +340,142 @@
         let currentTopClass = "";
         let currentLang = "gu";
 
+        function switchTab(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        const apmcRates = {
+            tharad: [
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૫૦ - ₹૧,૫૪૦ / ૨૦ કિલો" },
+                { crop: "રાયડો (Mustard)", price: "₹૧,૦૫૦ - ₹૧,૨૨૦ / ૨૦ કિલો" },
+                { crop: "જીરું (Cumin)", price: "₹૪,૫૦૦ - ₹૫,૮૦૦ / ૨૦ કિલો" },
+                { crop: "કપાસ (Cotton)", price: "₹૧,૪૫૦ - ₹૧,૭૨૦ / ૨૦ કિલો" },
+                { crop: "એરંડા (Castor)", price: "₹૧,૧૮૦ - ₹૧,૩૧૦ / ૨૦ કિલો" }
+            ],
+            deesa: [
+                { crop: "બટાટા (Potato)", price: "₹૨૪૦ - ₹૩૮૦ / ૨૦ કિલો" },
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૨૦ - ₹૧,૫૨૦ / ૨૦ કિલો" },
+                { crop: "રાયડો (Mustard)", price: "₹૧,૦૪૦ - ₹૧,૨૧૦ / ૨૦ કિલો" },
+                { crop: "જીરું (Cumin)", price: "₹૪,૪૦૦ - ₹૫,૭૫૦ / ૨૦ કિલો" }
+            ],
+            vav: [
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૪૦ - ₹૧,૫૩૦ / ૨૦ કિલો" },
+                { crop: "બાજરી (Millet)", price: "₹૪૨૦ - ₹૫૧૦ / ૨૦ કિલો" },
+                { crop: "જીરું (Cumin)", price: "₹૪,૪૫૦ - ₹૫,૭૦૦ / ૨૦ કિલો" },
+                { crop: "ગવાર (Guar)", price: "₹950 - ₹૧,૧૨૦ / ૨૦ કિલો" }
+            ],
+            palanpur: [
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૬૦ - ₹૧,૫૫૦ / ૨૦ કિલો" },
+                { crop: "રાયડો (Mustard)", price: "₹૧,૦૬૦ - ₹૧,૨૩૦ / ૨૦ કિલો" },
+                { crop: "ઘઉં (Wheat)", price: "₹૪૬૦ - ₹૫૫૦ / ૨૦ કિલો" },
+                { crop: "એરંડા (Castor)", price: "₹૧,૧૯૦ - ₹૧,૩૨૫ / ૨૦ કિલો" }
+            ]
+        };
+
+        function showMarketRates() {
+            const selectedVal = document.getElementById("market-select").value;
+            const rates = apmcRates[selectedVal] || apmcRates["tharad"];
+            
+            let html = `<table class="rate-table"><tr><th>પાકનું નામ</th><th>આજનો ભાવ (રૂ.)</th></tr>`;
+            rates.forEach(item => {
+                html += `<tr><td><b>${item.crop}</b></td><td>${item.price}</td></tr>`;
+            });
+            html += `</table>`;
+            
+            document.getElementById("market-rate-result").innerHTML = html;
+        }
+
+        // 🎙️ VOICE INPUT RECOGNITION FEATURE
+        function startVoiceRecognition() {
+            const voiceStatus = document.getElementById("voice-status");
+            const queryInput = document.getElementById("query-input");
+
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("તમારા બ્રાઉઝરમાં વોઈસ ટાઈપિંગ સપોર્ટ કરતું નથી.");
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+
+            recognition.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'en' ? 'en-US' : 'gu-IN');
+            recognition.interimResults = false;
+
+            recognition.onstart = function() {
+                voiceStatus.innerText = "🎙️ બોલો, રેકોર્ડિંગ ચાલુ છે...";
+            };
+
+            recognition.onspeechend = function() {
+                voiceStatus.innerText = "";
+                recognition.stop();
+            };
+
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                queryInput.value = transcript;
+                voiceStatus.innerText = "✅ બોલાયેલ પ્રશ્ન ઉમેરાઈ ગયો.";
+                getAgriAdvice();
+            };
+
+            recognition.onerror = function(event) {
+                voiceStatus.innerText = "⚠️ અવાજ ઓળખવામાં ભૂલ થઈ. ફરી પ્રયાસ કરો.";
+            };
+
+            recognition.start();
+        }
+
+        // 🧠 EXPANDED AGRI ADVISORY WITH MULTIPLE SOLUTIONS, GOOGLE & YOUTUBE LINKS
+        function getAgriAdvice() {
+            const query = document.getElementById("query-input").value.trim();
+            const resDiv = document.getElementById("query-result");
+
+            if (!query) {
+                resDiv.innerHTML = "<span style='color:#d32f2f;'>⚠️ મહેરબાની કરીને તમારો પ્રશ્ન બોલો અથવા ટાઈપ કરો.</span>";
+                return;
+            }
+
+            const qLower = query.toLowerCase();
+            let matchedAdvice = "";
+
+            if (qLower.includes("પીળા") || qLower.includes("yellow")) {
+                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> પાંદડા પીળા પડવાનું મુખ્ય કારણ નાઇટ્રોજન, સલ્ફર અથવા લોહતત્વ (Iron Deficiency) ની ઉણપ છે.<br>• <b>ઉપાય:</b> ૧૯:૧૯:૧૯ ખાતર (૫૦ ગ્રામ/૧૫ લીટર) અથવા ફેરસ સલ્ફેટ (૩૦ ગ્રામ) + લીંબુના ફૂલ સાથે છંટકાવ કરવો. પિયત સાથે યુરિયા આપવું.";
+            } else if (qLower.includes("સુકારો") || qLower.includes("મૂળ") || qLower.includes("રોટ") || qLower.includes("wilt")) {
+                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> ફૂગના કારણે છોડના મૂળ સુકાઈ જાય છે (Mould / Stem Rot).<br>• <b>ઉપાય:</b> ટ્રાઇકોડર્મા હરઝિયાનામ (૧ કિલો/એકર) સેન્દ્રીય ખાતર સાથે આપવું અથવા કાર્બેન્ડાઝીમ + મૅન્કોઝેબ (સાફ) દવાનું પિયત પાણી સાથે ડ્રેન્ચિંગ કરવું.";
+            } else if (qLower.includes("ઈયળ") || qLower.includes("જીવાત") || qLower.includes("કાટર") || qLower.includes("worm")) {
+                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> લશ્કરી ઈયળ અથવા લીલી ઈયળનો ઉપદ્રવ.<br>• <b>ઉપાય:</b> ઈમામેક્ટીન બેન્ઝોએટ ૫% SG (૭ ગ્રામ/૧૫ લીટર) અથવા ક્લોરેન્ટ્રાનીલીપ્રોલ (કોરાજન - ૪ મિલી/૧૫ લીટર) નો સાંજના સમયે છંટકાવ કરવો.";
+            } else if (qLower.includes("ટિક્કા") || qLower.includes("ડબ્બા") || qLower.includes("ટપકા") || qLower.includes("tikka")) {
+                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> સેર્કોસ્પોરા ફૂગના કારણે પાંદડા પર કાળા ડાઘ પડે છે.<br>• <b>ઉપાય:</b> ટેબુકોનાઝોલ + ટ્રિફ્લોક્સીસ્ટ્રોબિન (નેટિવો - ૧૦ ગ્રામ/૧૫ લીટર) અથવા મેન્કોઝેબ ૭૫% (૩૦ ગ્રામ) નો છંટકાવ કરવો.";
+            } else if (qLower.includes("તળછારો") || qLower.includes("મશી") || qLower.includes("મોલો") || qLower.includes("aphid")) {
+                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> રસચૂસિયા જીવાત (મોલો-મશી/ચિપ્સ) નો ઉપદ્રવ.<br>• <b>ઉપાય:</b> ઈમિડાક્લોપ્રિડ ૧૭.૮% SL (૪ મિલી/૧૫ લીટર) અથવા થામેથોક્સમ ૨૫% WG (૫ ગ્રામ/૧૫ લીટર) નો છંટકાવ કરવો.";
+            } else if (qLower.includes("ઉધઈ") || qLower.includes("termite")) {
+                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> જમીનમાં ભેજ ઓછો હોવાથી ઉધઈ મૂળને નુકસાન કરે છે.<br>• <b>ઉપાય:</b> ક્લોરપાયરીફોસ ૨૦% EC (૧ લીટર/એકર) પિયતના પાણી સાથે આપવું.";
+            }
+
+            let googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + " ખેતી ઉપાય કૃષિ રોગ નિયંત્રણ")}`;
+            let youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query + " ખેતી ઇલાજ")}`;
+
+            let htmlOutput = "";
+            if (matchedAdvice !== "") {
+                htmlOutput += `<div style='margin-bottom:8px; line-height:1.5;'>${matchedAdvice}</div>`;
+            } else {
+                htmlOutput += `<div style='margin-bottom:8px;'><b>ℹ️ ઓટોમેટેડ કૃષિ સલાહ:</b> આપના પ્રશ્ન માટે વધુ વિગતવાર માહિતી અને વિડીયો નીચે આપેલા માધ્યમથી મેળવો.</div>`;
+            }
+
+            htmlOutput += `
+                <div style="margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="btn-google" onclick="window.open('${googleSearchUrl}', '_blank')">🔍 Google પર ઉત્તર શોધો</button>
+                    <button class="btn-youtube" onclick="window.open('${youtubeSearchUrl}', '_blank')">▶️ YouTube વિડીયો જુઓ</button>
+                    <a class="btn-call" href="tel:18001801551">📞 કિસાન કૉલ સેન્ટર (૧૮૦૦-૧૮૦-૧૫૫૧)</a>
+                </div>
+            `;
+
+            resDiv.innerHTML = htmlOutput;
+        }
+
         const translations = {
             gu: {
                 schoolName: "🏫 આંતરોલ પ્રાથમિક શાળા",
@@ -364,7 +484,8 @@
                 mentorBadge: "👨‍🏫 માર્ગદર્શક:",
                 student1Badge: "👨‍🎓 વિદ્યાર્થી ૧:",
                 student2Badge: "👨‍🎓 વિદ્યાર્થી ૨:",
-                weatherTitle: "હવામાન અને પાક સલાહ (Weather Advisory)",
+                newsTitle: "તાજા કૃષિ સમાચાર (Agri News Alert)",
+                weatherTitle: "હવામાન સલાહ (Live Weather)",
                 weatherStats: "🌡️ તાપમાન: <b>31°C</b> | 💧 ભેજ: <b>78%</b>",
                 weatherAlert: "હવામાનમાં વધુ ભેજ હોવાથી 'ટિક્કા' અથવા 'ફૂગ' નો રોગ ફેલાવાની શક્યતા વધુ છે.",
                 calcTitle: "ખાતર કેલ્ક્યુલેટર (Fertilizer Calculator)",
@@ -394,8 +515,9 @@
                 mentorBadge: "👨‍🏫 मार्गदर्शक:",
                 student1Badge: "👨‍🎓 छात्र १:",
                 student2Badge: "👨‍🎓 छात्र २:",
-                weatherTitle: "मौसम और फसल सलाह (Weather Advisory)",
-                weatherStats: "🌡️ तापमान: <b>31°C</b> | 💧 आर्द्रता: <b>78%</b>",
+                newsTitle: "ताज़ा कृषि समाचार (Agri News Alert)",
+                weatherTitle: "मौसम सलाह (Live Weather)",
+                weatherStats: "🌡 तापमान: <b>31°C</b> | 💧 आर्द्रता: <b>78%</b>",
                 weatherAlert: "मौसम में अधिक नमी के कारण 'टिक्का' या 'फंगस' रोग फैलने की संभावना अधिक है।",
                 calcTitle: "उर्वरक कैलकुलेटर (Fertilizer Calculator)",
                 calcDesc: "अपने खेत का क्षेत्रफल (बीघा में) दर्ज करें:",
@@ -421,10 +543,11 @@
                 schoolName: "🏫 Antrol Primary School",
                 schoolLoc: "Taluka - Tharad, District - Vav-Tharad",
                 projTitle: "🌱 AI Farmer Friend (Groundnut Disease Detection)",
-                mentorBadge: "👨‍🏫 Mentor:",
+                mentorBadge: "👨‍‍🏫 Mentor:",
                 student1Badge: "👨‍🎓 Student 1:",
                 student2Badge: "👨‍🎓 Student 2:",
-                weatherTitle: "Weather & Crop Advisory",
+                newsTitle: "Latest Agri News Alerts",
+                weatherTitle: "Weather Advisory",
                 weatherStats: "🌡️ Temp: <b>31°C</b> | 💧 Humidity: <b>78%</b>",
                 weatherAlert: "High humidity increases the risk of Tikka or Fungal diseases.",
                 calcTitle: "Soil Fertilizer Calculator",
@@ -573,6 +696,7 @@
             document.getElementById("txt-mentor-badge").innerText = t.mentorBadge;
             document.getElementById("txt-student1-badge").innerText = t.student1Badge;
             document.getElementById("txt-student2-badge").innerText = t.student2Badge;
+            document.getElementById("txt-news-title").innerText = t.newsTitle;
             document.getElementById("txt-weather-title").innerText = t.weatherTitle;
             document.getElementById("txt-weather-stats").innerHTML = t.weatherStats;
             document.getElementById("weather-alert").innerText = t.weatherAlert;
@@ -686,7 +810,6 @@
             }
         }
 
-        /* 🟢 સુધારેલું Photo Upload Function */
         async function handleFileUpload(event) {
             const file = event.target.files[0];
             const errorDiv = document.getElementById("error-log");
@@ -694,7 +817,6 @@
 
             if (!file) return;
 
-            // ૧. કૅમેરા જો ચાલુ હોય તો બંધ કરવો
             isCameraActive = false;
             if (videoElement.srcObject) {
                 const tracks = videoElement.srcObject.getTracks();
@@ -705,13 +827,11 @@
 
             const imgElement = document.getElementById("preview-img");
 
-            // ૨. FileReader વડે ફોટો રીડ કરવો
             const reader = new FileReader();
             reader.onload = async function(e) {
                 imgElement.src = e.target.result;
                 imgElement.style.display = "block";
 
-                // ૩. ફોટો બ્રાઉઝરમાં સંપૂર્ણ લોડ થયા બાદ જ મોડેલ ચલાવવું
                 imgElement.onload = async function() {
                     try {
                         await initModel();
@@ -725,7 +845,6 @@
             };
             reader.readAsDataURL(file);
 
-            // ૪. ઇનપુટ રીસેટ કરવું જેથી એકનો એક ફોટો ફરી પસંદ કરી શકાય
             event.target.value = '';
         }
 
@@ -753,7 +872,6 @@
         async function predict(imageSource) {
             if (!model) return;
 
-            // Teachable machine prediction
             const prediction = await model.predict(imageSource);
             let topClass = "";
             let highestProb = 0;
@@ -866,7 +984,7 @@
                 msg = `🌱 *AI Farmer Friend - Crop Disease Report*\n\n`;
                 msg += `📌 *Disease:* ${currentTopClass}\n`;
                 msg += `💊 *Remedy:* ${data.treatment}\n`;
-                msg += `🛡️ *Prevention:* ${data.prevention}\n\n`;
+                msg += `🛡 *Prevention:* ${data.prevention}\n\n`;
                 msg += `🏫 *Antrol Primary School*`;
             } else {
                 msg = `🌱 *AI ખેડૂત મિત્ર - રોગ નિદાન રિપોર્ટ*\n\n`;
@@ -895,6 +1013,10 @@
         function closeModal() {
             document.getElementById("info-modal").style.display = "none";
         }
+
+        window.onload = function() {
+            showMarketRates();
+        };
     </script>
 </body>
 </html>
