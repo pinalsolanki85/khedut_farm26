@@ -3,21 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1b5e20">
+    <link rel="manifest" href="manifest.json">
     <title>ખેડૂત મિત્ર - આંતરોલ પ્રાથમિક શાળા</title>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-        body { background-color: #eef7f2; color: #2d3748; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 15px; }
+        body { background-color: #eef7f2; color: #2d3748; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 15px; transition: background 0.3s, color 0.3s; }
+        
+        /* Dark Mode */
+        body.dark-mode { background-color: #121212; color: #e0e0e0; }
+        body.dark-mode .feature-card, body.dark-mode .main-card, body.dark-mode .credits-bar, body.dark-mode .modal-card { background: #1e1e1e; color: #e0e0e0; border-color: #333; }
+        body.dark-mode .news-badge { background: #1a237e; color: #bbdefb; }
+        body.dark-mode .crop-season { background: #263238; color: #e0e0e0; }
+        body.dark-mode .rate-table th { background: #1b5e20; color: white; }
+        body.dark-mode .rate-table td { border-color: #333; }
+        body.dark-mode .calc-input, body.dark-mode .dropdown-select { background: #333; color: white; border-color: #555; }
+        body.dark-mode .menu-btn { background: #1e1e1e; color: #a5d6a7; border-color: #2e7d32; }
+        body.dark-mode .menu-btn.active { background: #2e7d32; color: white; }
         
         .header-card { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; width: 100%; max-width: 500px; padding: 18px; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-bottom: 12px; }
         .school-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 4px; }
         .school-location { font-size: 0.85rem; opacity: 0.9; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.2); padding-bottom: 6px; }
         .project-title { font-size: 1.2rem; font-weight: bold; color: #ffe082; }
 
-        .lang-select-box { margin-bottom: 10px; display: flex; justify-content: flex-end; width: 100%; max-width: 500px; }
+        .top-controls { display: flex; justify-content: space-between; width: 100%; max-width: 500px; margin-bottom: 10px; gap: 6px; flex-wrap: wrap; }
         .lang-select { padding: 6px 12px; border-radius: 8px; border: 2px solid #2e7d32; font-weight: bold; background: #ffffff; color: #1b5e20; cursor: pointer; outline: none; }
+        .icon-btn { background: #ffffff; border: 2px solid #2e7d32; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 1rem; color: #1b5e20; font-weight: bold; }
+        .icon-btn:hover { background: #e8f5e9; }
 
         .credits-bar { background: #ffffff; width: 100%; max-width: 500px; border-radius: 14px; padding: 10px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; gap: 6px; border: 1px solid #e2e8f0; }
         .credits-section { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; border-radius: 8px; }
@@ -29,7 +45,6 @@
         .student-badge { background-color: #2e7d32; color: #ffffff; padding: 3px 6px; border-radius: 6px; font-weight: 700; font-size: 0.78rem; }
         .student-name { color: #1b5e20; font-size: 0.9rem; font-weight: 800; }
 
-        /* 🔘 Menu Buttons Bar */
         .menu-bar { display: flex; gap: 6px; width: 100%; max-width: 500px; margin-bottom: 12px; overflow-x: auto; padding-bottom: 4px; }
         .menu-btn { flex: 1; min-width: 75px; padding: 8px 5px; font-size: 0.8rem; font-weight: bold; border: 1px solid #2e7d32; background: #ffffff; color: #2e7d32; border-radius: 10px; cursor: pointer; text-align: center; white-space: nowrap; transition: 0.2s; }
         .menu-btn.active { background: #2e7d32; color: white; box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3); }
@@ -42,8 +57,8 @@
 
         .news-badge { background-color: #e3f2fd; border-left: 4px solid #1976d2; padding: 8px; margin-top: 6px; border-radius: 4px; font-size: 0.85rem; color: #0d47a1; }
 
-        .calc-input-group { display: flex; gap: 6px; margin-top: 8px; }
-        .calc-input, .dropdown-select { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.92rem; }
+        .calc-input-group { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .calc-input, .dropdown-select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.92rem; }
 
         .btn-mic { background: #0288d1; color: white; border: none; padding: 0 12px; border-radius: 6px; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
@@ -53,6 +68,7 @@
         .btn-secondary { background: linear-gradient(135deg, #00897b, #004d40); }
         .btn-voice { background: linear-gradient(135deg, #0288d1, #01579b); width: 100%; margin-top: 10px; display: none; }
         .btn-whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); width: 100%; margin-top: 10px; display: none; }
+        .btn-pdf { background: linear-gradient(135deg, #d32f2f, #b71c1c); width: 100%; margin-top: 10px; display: none; }
         .btn-more { background: linear-gradient(135deg, #ff9800, #e65100); width: 100%; margin-top: 12px; display: none; }
         .btn-ikhedut { background: linear-gradient(135deg, #e65100, #bf360c); color: white; margin-top: 10px; width: 100%; font-size: 0.95rem; }
         .btn-google { background: linear-gradient(135deg, #4285f4, #1a73e8); color: white; margin-top: 8px; font-size: 0.85rem; padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; }
@@ -72,9 +88,13 @@
         .treatment-card { background: #e8f5e9; border: 1px solid #c8e6c9; }
         .prevention-card { background: #e0f2f1; border: 1px solid #b2dfdb; }
         .info-title { font-weight: bold; color: #1b5e20; margin-bottom: 5px; }
-        .info-text { font-size: 0.9rem; color: #37474f; line-height: 1.4; }
+        .info-text { font-size: 0.9rem; color: #37474f; line-height: 1.4; white-space: pre-line; }
 
-        /* Rates Table */
+        /* Loading Spinner */
+        .spinner-container { text-align: center; padding: 20px; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #e0e0e0; border-top: 5px solid #2e7d32; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 12px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         .rate-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.88rem; }
         .rate-table th, .rate-table td { border: 1px solid #c8e6c9; padding: 8px; text-align: left; }
         .rate-table th { background-color: #e8f5e9; color: #1b5e20; }
@@ -83,7 +103,6 @@
         .scheme-title { font-weight: bold; color: #33691e; }
         .scheme-desc { font-size: 0.85rem; color: #424242; margin-top: 3px; }
 
-        /* Crop Calendar Box */
         .crop-season { background: #f1f8e9; border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid #c8e6c9; }
         .crop-season-title { font-weight: bold; color: #2e7d32; font-size: 0.95rem; }
 
@@ -96,17 +115,42 @@
         .modal-text { font-size: 0.88rem; color: #263238; line-height: 1.5; white-space: pre-line; }
 
         #error-log { color: #d32f2f; margin-top: 10px; font-weight: bold; font-size: 0.9rem; word-break: break-all; }
-        .footer { margin-top: 15px; font-size: 0.85rem; color: #666; text-align: center; }
+        .footer { margin-top: 15px; font-size: 0.85rem; color: #666; text-align: center; padding: 10px; }
+
+        /* History item */
+        .history-item { display: flex; gap: 10px; padding: 10px; border-bottom: 1px solid #e0e0e0; align-items: center; }
+        .history-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #81c784; }
+        .history-info { flex: 1; font-size: 0.85rem; }
+        .history-disease { font-weight: bold; color: #c62828; }
+        .history-date { font-size: 0.75rem; color: #666; }
+
+        /* FAQ */
+        .faq-item { background: #f9fbe7; border-radius: 8px; margin-top: 8px; padding: 10px; cursor: pointer; }
+        .faq-q { font-weight: bold; color: #33691e; font-size: 0.9rem; }
+        .faq-a { font-size: 0.85rem; color: #555; margin-top: 6px; display: none; }
+        .faq-item.open .faq-a { display: block; }
+
+        /* Toast */
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #2e7d32; color: white; padding: 12px 20px; border-radius: 8px; font-weight: bold; z-index: 2000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+
+        /* Install PWA button */
+        .install-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #2e7d32, #1b5e20); color: white; border: none; padding: 12px 16px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.3); z-index: 999; display: none; }
     </style>
 </head>
 <body>
 
-    <div class="lang-select-box">
+    <!-- Top Controls: Language + Dark Mode + Font Size -->
+    <div class="top-controls">
         <select id="lang-select" class="lang-select" onchange="changeLanguage()">
             <option value="gu" selected>🌐 ગુજરાતી</option>
             <option value="hi">🌐 हिन्दी</option>
             <option value="en">🌐 English</option>
         </select>
+        <div style="display:flex; gap:6px;">
+            <button class="icon-btn" onclick="toggleDarkMode()" id="dark-btn" title="Dark Mode">🌙</button>
+            <button class="icon-btn" onclick="decreaseFont()" title="Font Small">A-</button>
+            <button class="icon-btn" onclick="increaseFont()" title="Font Big">A+</button>
+        </div>
     </div>
 
     <div class="header-card">
@@ -120,7 +164,6 @@
             <span class="mentor-badge" id="txt-mentor-badge">👨‍🏫 માર્ગદર્શક:</span>
             <span class="mentor-name">પિનલકુમાર બી. સોલંકી</span>
         </div>
-
         <div class="students-wrapper">
             <div class="credits-section student-card">
                 <span class="student-badge" id="txt-student1-badge">👨‍🎓 વિદ્યાર્થી ૧:</span>
@@ -133,19 +176,20 @@
         </div>
     </div>
 
-    <!-- 🔘 Menu Buttons Bar -->
+    <!-- Menu Bar -->
     <div class="menu-bar">
         <button class="menu-btn active" onclick="switchTab('home-tab', this)">🔍 સ્કેન</button>
         <button class="menu-btn" onclick="switchTab('calendar-tab', this)">🗓️ કેલેન્ડર</button>
-        <button class="menu-btn" onclick="switchTab('apmc-tab', this)">📊 બજાર ભાવ</button>
-        <button class="menu-btn" onclick="switchTab('yojna-tab', this)">🏛️ યોજનાઓ</button>
+        <button class="menu-btn" onclick="switchTab('apmc-tab', this)">📊 બજાર</button>
+        <button class="menu-btn" onclick="switchTab('yojna-tab', this)">🏛️ યોજના</button>
         <button class="menu-btn" onclick="switchTab('calc-tab', this)">🧪 ખાતર</button>
         <button class="menu-btn" onclick="switchTab('advisor-tab', this)">💬 સલાહ</button>
+        <button class="menu-btn" onclick="switchTab('history-tab', this)">📚 ઇતિહાસ</button>
+        <button class="menu-btn" onclick="switchTab('faq-tab', this)">❓ FAQ</button>
     </div>
 
-    <!-- 1️⃣ HOME TAB (Scan First, Weather & Live News Alerts Below) -->
+    <!-- 1️⃣ HOME TAB -->
     <div id="home-tab" class="tab-content active">
-        <!-- Main Photo Scan Card (મુખ્ય ભાગ સૌથી ઉપર) -->
         <div class="main-card">
             <div class="button-group">
                 <button class="btn" onclick="startCamera()" id="txt-btn-cam">📷 કૅમેરા ચાલુ કરો</button>
@@ -163,170 +207,230 @@
             <div id="results-title" class="results-title" style="display:none;"><span id="txt-analysis-title">📊 રોગનું વિશ્લેષણ (Analysis):</span></div>
             <div id="label-container"></div>
 
-            <button id="voice-btn" class="btn btn-voice" onclick="speakAnalysis()">🔊 <span id="txt-voice-btn">માર્ગદર્શન સાંભળો (Voice Assistant)</span></button>
-            <button id="whatsapp-btn" class="btn btn-whatsapp" onclick="shareOnWhatsApp()">📲 <span id="txt-wa-btn">વોટ્સએપ પર રિપોર્ટ મોકલો</span></button>
+            <button id="voice-btn" class="btn btn-voice" onclick="speakAnalysis()">🔊 <span id="txt-voice-btn">માર્ગદર્શન સાંભળો</span></button>
+            <button id="whatsapp-btn" class="btn btn-whatsapp" onclick="shareOnWhatsApp()">📲 <span id="txt-wa-btn">વોટ્સએપ પર મોકલો</span></button>
+            <button id="pdf-btn" class="btn btn-pdf" onclick="downloadPDF()">📄 <span id="txt-pdf-btn">PDF રિપોર્ટ ડાઉનલોડ કરો</span></button>
 
             <div id="treatment-card" class="info-card treatment-card">
                 <div class="info-title" id="txt-treatment-title">💊 ત્વરિત ઈલાજ / દવાની સલાહ:</div>
-                <div id="treatment-text" class="info-text">--</div>
+                <div id="treatment-text" class="info-text">📷 કૃપા કરીને પહેલા પાનનો ફોટો સ્કેન કરો.</div>
             </div>
 
             <div id="prevention-card" class="info-card prevention-card">
                 <div class="info-title" id="txt-prevention-title">🛡️ ભવિષ્યમાં રોગથી બચવાના આગોતરા ઉપાયો:</div>
-                <div id="prevention-text" class="info-text">--</div>
+                <div id="prevention-text" class="info-text">📷 સ્કેન કર્યા પછી આગોતરા ઉપાયો અહીં દેખાશે.</div>
             </div>
 
-            <button id="more-info-btn" class="btn btn-more" onclick="openModal()">ℹ️ <span id="txt-more-btn">વધુ જાણો (વિગતવાર માર્ગદર્શન)</span></button>
+            <button id="more-info-btn" class="btn btn-more" onclick="openModal()">ℹ️ <span id="txt-more-btn">વધુ જાણો</span></button>
 
             <div id="error-log"></div>
         </div>
 
-        <!-- Live News Alert Box (સ્કેનની નીચે) -->
-        <div class="feature-card">
-            <div class="feature-title">📰 <span id="txt-news-title">તાજા કૃષિ સમાચાર (Agri News Alert)</span></div>
-            <div class="news-badge">
-                📢 <b>હવામાન એલર્ટ:</b> ઉત્તર ગુજરાતમાં આગામી ૪૮ કલાકમાં હળવા ઝાપટાંની શક્યતા. વાવણી લાયક વરસાદ બાદ જ બિયારણ વાવવું.
-            </div>
-            <div class="news-badge" style="background-color:#fff3e0; border-left-color:#f57c00; color:#e65100;">
-                🚨 <b>રોગ સાવચેતી:</b> ભેજવાળા હવામાનને કારણે મગફળીમાં 'ટિક્કા' રોગનો ઉપદ્રવ વધવાની શક્યતા. પૂર્વ તૈયારી રૂપે ફૂગનાશકનો છંટકાવ કરવો.
-            </div>
-        </div>
-
-        <!-- Live Weather Advisory (સ્કેનની નીચે) -->
+        <!-- Live Weather (GPS based) -->
         <div class="feature-card">
             <div class="feature-title">☀️ <span id="txt-weather-title">હવામાન સલાહ (Live Weather)</span></div>
             <div style="font-size: 0.9rem; color: #444;" id="weather-info">
-                <span id="txt-weather-stats">🌡️ તાપમાન: <b>31°C</b> | 💧 ભેજ: <b>78%</b></span><br>
-                ⚠️ <span id="weather-alert" style="color: #c62828; font-weight: bold;">હવામાનમાં વધુ ભેજ હોવાથી 'ટિક્કા' અથવા 'ફૂગ' નો રોગ ફેલાવાની શક્યતા વધુ છે.</span>
+                <span id="txt-weather-stats">🌡️ તાપમાન: <b>લોડ થઈ રહ્યું છે...</b> | 💧 ભેજ: <b>...</b></span><br>
+                <span id="weather-alert" style="color: #c62828; font-weight: bold;"></span>
+                <div style="font-size: 0.75rem; color: #888; margin-top: 4px;" id="weather-location">📍 લોકેશન શોધી રહ્યું છે...</div>
+            </div>
+        </div>
+
+        <!-- Live News -->
+        <div class="feature-card">
+            <div class="feature-title">📰 <span id="txt-news-title">તાજા કૃષિ સમાચાર</span></div>
+            <div class="news-badge">
+                📢 <b>હવામાન એલર્ટ:</b> ઉત્તર ગુજરાતમાં આગામી ૪૮ કલાકમાં હળવા ઝાપટાંની શક્યતા.
+            </div>
+            <div class="news-badge" style="background-color:#fff3e0; border-left-color:#f57c00; color:#e65100;">
+                🚨 <b>રોગ સાવચેતી:</b> ભેજવાળા હવામાનમાં 'ટિક્કા' રોગનો ઉપદ્રવ વધવાની શક્યતા.
             </div>
         </div>
     </div>
 
-    <!-- 2️⃣ CROP CALENDAR TAB -->
+    <!-- 2️⃣ CROP CALENDAR -->
     <div id="calendar-tab" class="tab-content">
         <div class="feature-card">
-            <div class="feature-title">🗓️ <span>વાવણી કેલેન્ડર અને પાક માર્ગદર્શિકા (Crop Calendar)</span></div>
-            
+            <div class="feature-title">🗓️ <span>વાવણી કેલેન્ડર</span></div>
             <div class="crop-season">
-                <div class="crop-season-title">🌧️ ૧. ચોમાસું પાક (ખરીફ સીઝન - જૂન થી ઓક્ટોબર)</div>
+                <div class="crop-season-title">🌧️ ૧. ચોમાસું પાક (ખરીફ - જૂન થી ઓક્ટોબર)</div>
                 <div style="font-size:0.85rem; color:#444; margin-top:4px;">
-                    • <b>મુખ્ય પાકો:</b> મગફળી, કપાસ, બાજરી, તલ, ગુવાર, મગ.<br>
-                    • <b>કેર/સંભાળ:</b> વાવણી પહેલાં બીજને ટ્રાઇકોડર્માનો પટ આપવો. ૧૫ થી ૨૦ દિવસે નીંદણમુક્ત ખેતર રાખવું.
+                    • <b>પાકો:</b> મગફળી, કપાસ, બાજરી, તલ, ગુવાર, મગ.<br>
+                    • <b>સંભાળ:</b> બીજને ટ્રાઇકોડર્માનો પટ. ૧૫-૨૦ દિવસે નીંદણમુક્ત.
                 </div>
             </div>
-
             <div class="crop-season" style="background:#e0f2f1; border-color:#80cbc4;">
-                <div class="crop-season-title" style="color:#00695c;">❄️ ૨. શિયાળુ પાક (રવિ સીઝન - નવેમ્બર થી ફેબ્રુઆરી)</div>
+                <div class="crop-season-title" style="color:#00695c;">❄️ ૨. શિયાળુ પાક (રવિ - નવેમ્બર થી ફેબ્રુઆરી)</div>
                 <div style="font-size:0.85rem; color:#444; margin-top:4px;">
-                    • <b>મુખ્ય પાકો:</b> રાયડો, જીરું, ઘઉં, બટાટા, ચણા, વરિયાળી.<br>
-                    • <b>કેર/સંભાળ:</b> જીરું અને રાયડામાં ચરમી/કાળિયા રોગ સામે આગોતરો ફૂગનાશકનો છંટકાવ કરવો.
+                    • <b>પાકો:</b> રાયડો, જીરું, ઘઉં, બટાટા, ચણા.<br>
+                    • <b>સંભાળ:</b> ચરમી/કાળિયા રોગ સામે ફૂગનાશક છંટકાવ.
                 </div>
             </div>
-
             <div class="crop-season" style="background:#fffde7; border-color:#fff59d;">
-                <div class="crop-season-title" style="color:#f57f17;">☀️ ૩. ઉનાળુ પાક (જાયદ સીઝન - માર્ચ થી મે)</div>
+                <div class="crop-season-title" style="color:#f57f17;">☀️ ૩. ઉનાળુ પાક (જાયદ - માર્ચ થી મે)</div>
                 <div style="font-size:0.85rem; color:#444; margin-top:4px;">
-                    • <b>મુખ્ય પાકો:</b> ઉનાળુ મગફળી, બાજરી, તલ, શાકભાજી.<br>
-                    • <b>કેર/સંભાળ:</b> પૂરતા પ્રમાણમાં પિયત આપવું અને ચુસિયા જીવાતો સામે ચીકાશ પર ધ્યાન આપવું.
+                    • <b>પાકો:</b> ઉનાળુ મગફળી, બાજરી, તલ, શાકભાજી.<br>
+                    • <b>સંભાળ:</b> પૂરતું પિયત, ચુસિયા જીવાત સામે ધ્યાન.
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 3️⃣ APMC MARKET RATES TAB -->
+    <!-- 3️⃣ APMC -->
     <div id="apmc-tab" class="tab-content">
         <div class="feature-card">
             <div class="feature-title">📈 <span id="txt-apmc-title">APMC લાઈવ બજાર ભાવ</span></div>
             <div style="font-size: 0.85rem; color: #555;">તમારું માર્કેટયાર્ડ પસંદ કરો:</div>
             <div class="calc-input-group">
                 <select id="market-select" class="dropdown-select" onchange="showMarketRates()">
-                    <option value="tharad" selected>થરાદ માર્કેટયાર્ડ (Tharad)</option>
-                    <option value="deesa">ડીસા માર્કેટયાર્ડ (Deesa)</option>
-                    <option value="vav">વાવ માર્કેટયાર્ડ (Vav)</option>
-                    <option value="palanpur">પાલનપુર માર્કેટયાર્ડ (Palanpur)</option>
+                    <option value="tharad" selected>થરાદ માર્કેટયાર્ડ</option>
+                    <option value="deesa">ડીસા માર્કેટયાર્ડ</option>
+                    <option value="vav">વાવ માર્કેટયાર્ડ</option>
+                    <option value="palanpur">પાલનપુર માર્કેટયાર્ડ</option>
                 </select>
+            </div>
+            <div style="font-size: 0.75rem; color: #f57c00; margin-top: 6px; font-weight: bold;">
+                ⏱️ છેલ્લે અપડેટ: <span id="apmc-update-time"></span>
             </div>
             <div id="market-rate-result"></div>
         </div>
     </div>
 
-    <!-- 4️⃣ YOJNA TAB -->
+    <!-- 4️⃣ YOJNA -->
     <div id="yojna-tab" class="tab-content">
         <div class="feature-card">
             <div class="feature-title">🏛️️ <span id="txt-yojna-title">સરકારી કૃષિ સહાય યોજનાઓ</span></div>
             <div class="scheme-item">
-                <div class="scheme-title">૧. ટ્રેક્ટર અને સાધન સહાય યોજના</div>
-                <div class="scheme-desc">ટ્રેક્ટર અને કૃષિ સાધનોની ખરીદી પર ૪૦% થી ૫૦% સુધીની સબસીડી.</div>
+                <div class="scheme-title">૧. ટ્રેક્ટર અને સાધન સહાય</div>
+                <div class="scheme-desc">૪૦% થી ૫૦% સુધીની સબસીડી.</div>
             </div>
             <div class="scheme-item">
-                <div class="scheme-title">૨. તાર ફેન્સીંગ યોજના (ખેતરની વાડ)</div>
-                <div class="scheme-desc">જંગલી પ્રાણીઓથી પાકના રક્ષણ માટે ખેતરની ચોતરફ તારની ફેન્સીંગ માટે સહાય.</div>
+                <div class="scheme-title">૨. તાર ફેન્સીંગ યોજના</div>
+                <div class="scheme-desc">જંગલી પ્રાણીઓથી રક્ષણ માટે સહાય.</div>
             </div>
             <div class="scheme-item">
-                <div class="scheme-title">૩. સોલાર પંપ અને ડ્રીપ ઇરિગેશન સહાય</div>
-                <div class="scheme-desc">ટપક સિંચાઈ પદ્ધતિ અને સૌર ઊર્જા આધારિત પંપ માટે ૭૫% સુધી સબસીડી.</div>
+                <div class="scheme-title">૩. સોલાર પંપ અને ડ્રીપ</div>
+                <div class="scheme-desc">૭૫% સુધી સબસીડી.</div>
             </div>
-            
-            <a href="https://ikhedut.gujarat.gov.in/" target="_blank" class="btn btn-ikhedut">
-                🔗 i-Khedut Portal પર ઓનલાઈન અરજી કરો
-            </a>
+            <a href="https://ikhedut.gujarat.gov.in/" target="_blank" class="btn btn-ikhedut">🔗 i-Khedut Portal પર અરજી કરો</a>
         </div>
     </div>
 
-    <!-- 5️⃣ FERTILIZER CALC TAB -->
+    <!-- 5️⃣ FERTILIZER CALC (UPDATED) -->
     <div id="calc-tab" class="tab-content">
         <div class="feature-card">
-            <div class="feature-title">🧪 <span id="txt-calc-title">ખાતર કેલ્ક્યુલેટર (Fertilizer Calculator)</span></div>
-            <div style="font-size: 0.85rem; color: #555;" id="txt-calc-desc">તમારા ખેતરનું ક્ષેત્રફળ (વીઘામાં) નાખો:</div>
+            <div class="feature-title">🧪 <span id="txt-calc-title">ખાતર કેલ્ક્યુલેટર</span></div>
+            
+            <div style="font-size: 0.85rem; color: #555; margin-bottom: 6px;">પાક પસંદ કરો:</div>
+            <select id="crop-select" class="dropdown-select" style="width:100%; margin-bottom: 8px;">
+                <option value="groundnut">🥜 મગફળી</option>
+                <option value="cotton">🌿 કપાસ</option>
+                <option value="wheat">🌾 ઘઉં</option>
+                <option value="bajra">🌾 બાજરી</option>
+                <option value="cumin">🌱 જીરું</option>
+                <option value="castor">🌿 એરંડા</option>
+            </select>
+
+            <div style="font-size: 0.85rem; color: #555; margin-bottom: 6px;">જમીનનો પ્રકાર:</div>
+            <select id="soil-select" class="dropdown-select" style="width:100%; margin-bottom: 8px;">
+                <option value="medium">મધ્યમ (સામાન્ય)</option>
+                <option value="low">ઓછી ફળદ્રુપ</option>
+                <option value="high">વધુ ફળદ્રુપ</option>
+            </select>
+
+            <div style="font-size: 0.85rem; color: #555;">ક્ષેત્રફળ (વીઘામાં):</div>
             <div class="calc-input-group">
-                <input type="number" id="vigha-input" class="calc-input" placeholder="ઉદા. 2" min="1">
+                <input type="number" id="vigha-input" class="calc-input" placeholder="ઉદા. 2" min="0.1" step="0.1">
                 <button class="btn" style="padding: 6px 12px;" onclick="calculateFertilizer()" id="txt-calc-btn">ગણતરી કરો</button>
             </div>
-            <div id="calc-result" style="margin-top: 10px; font-size: 0.9rem; font-weight: bold; color: #1b5e20;"></div>
+            <div id="calc-result" style="margin-top: 10px; font-size: 0.9rem; font-weight: bold; color: #1b5e20; white-space: pre-line;"></div>
         </div>
     </div>
 
-    <!-- 6️⃣ ADVISOR TAB (ENHANCED VOICE & SEARCH ADVISORY WITH GOOGLE & YOUTUBE) -->
+    <!-- 6️⃣ ADVISOR -->
     <div id="advisor-tab" class="tab-content">
         <div class="feature-card">
-            <div class="feature-title">💬 <span id="txt-advisor-title">સ્માર્ટ કૃષિ હેલ્પલાઇન (Voice & Search Advisory)</span></div>
-            <div style="font-size: 0.85rem; color: #555;">તમારો પ્રશ્ન બોલીને અથવા ટાઈપ કરીને શોધો:</div>
-            
+            <div class="feature-title">💬 <span id="txt-advisor-title">સ્માર્ટ કૃષિ હેલ્પલાઇન</span></div>
+            <div style="font-size: 0.85rem; color: #555;">તમારો પ્રશ્ન બોલો અથવા ટાઈપ કરો:</div>
             <div class="calc-input-group">
-                <input type="text" id="query-input" class="calc-input" placeholder="ઉદા. મગફળીમાં પીળા પાંદડા થાય છે...">
-                <button class="btn-mic" onclick="startVoiceRecognition()" title="બોલીને શોધો">🎙️</button>
+                <input type="text" id="query-input" class="calc-input" placeholder="ઉદા. મગફળીમાં પીળા પાંદડા...">
+                <button class="btn-mic" onclick="startVoiceRecognition()" title="બોલો">🎙️</button>
                 <button class="btn" style="padding: 6px 12px;" onclick="getAgriAdvice()">શોધો</button>
             </div>
             <div id="voice-status" style="font-size:0.8rem; color:#0288d1; margin-top:4px;"></div>
-            
             <div id="query-result" style="margin-top: 12px; font-size: 0.9rem; color: #1b5e20; border-top: 1px dashed #ccc; padding-top: 10px;"></div>
         </div>
     </div>
 
-    <!-- Modal for Detailed Info -->
+    <!-- 7️⃣ HISTORY TAB (NEW) -->
+    <div id="history-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">📚 <span>મારો સ્કેન ઇતિહાસ</span></div>
+            <button class="btn" style="background: linear-gradient(135deg, #d32f2f, #b71c1c); margin-bottom: 10px;" onclick="clearHistory()">🗑️ ઇતિહાસ સાફ કરો</button>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <!-- 8️⃣ FAQ TAB (NEW) -->
+    <div id="faq-tab" class="tab-content">
+        <div class="feature-card">
+            <div class="feature-title">❓ <span>વારંવાર પૂછાતા પ્રશ્નો (FAQ)</span></div>
+            
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">1. AI કેવી રીતે કામ કરે છે?</div>
+                <div class="faq-a">અમે Google Teachable Machine વાપરીને AI મોડેલ ટ્રેન કર્યું છે. ફોટો અપલોડ કરતાં જ AI પાનના રંગ, ડાઘ અને આકાર પરથી રોગ ઓળખે છે.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">2. આ એપ ફ્રી છે?</div>
+                <div class="faq-a">હા, આ એપ સંપૂર્ણપણે ફ્રી છે. આંતરોલ પ્રાથમિક શાળાના વિદ્યાર્થીઓએ ખેડૂતોની મદદ માટે બનાવી છે.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">3. AI કેટલો સચોટ છે?</div>
+                <div class="faq-a">AI મોડેલ 90% થી વધુ સચોટતા ધરાવે છે. જો ખાતરી ઓછી હોય તો એપ જાતે જણાવે છે કે નિષ્ણાતની સલાહ લેવી.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">4. મારો ડેટા સુરક્ષિત છે?</div>
+                <div class="faq-a">હા, બધો ડેટા તમારા ફોનમાં જ સેવ થાય છે. અમે કોઈ સર્વર પર મોકલતા નથી.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">5. નિષ્ણાતનો સંપર્ક કેવી રીતે કરવો?</div>
+                <div class="faq-a">કિસાન કૉલ સેન્ટર: 1800-180-1551 (ટોલ ફ્રી). અથવા નજીકના કૃષિ સેવા કેન્દ્રનો સંપર્ક કરો.</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">6. આ એપ ઇન્ટરનેટ વગર ચાલશે?</div>
+                <div class="faq-a">હા, ઇન્સ્ટોલ કર્યા પછી મોટાભાગના ફીચર ઓફલાઇન કામ કરે છે (AI સ્કેન, ખાતર કેલ્ક્યુલેટર, કેલેન્ડર).</div>
+            </div>
+            <div class="faq-item" onclick="toggleFaq(this)">
+                <div class="faq-q">7. શાળા વિશે માહિતી?</div>
+                <div class="faq-a">આંતરોલ પ્રાથમિક શાળા, તાલુકો થરાદ, જિલ્લો વાવ-થરાદ. માર્ગદર્શક: પિનલકુમાર બી. સોલંકી. વિદ્યાર્થીઓ: આરાધ્યા પટેલ અને મિત્તલ ચૌધરી.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
     <div id="info-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
-                <span id="modal-disease-title">📖 રોગ વિશે વિગતવાર માર્ગદર્શન</span>
+                <span id="modal-disease-title">📖 વિગતવાર માર્ગદર્શન</span>
                 <button class="close-btn" onclick="closeModal()">✕</button>
             </div>
-
             <div class="modal-section">
-                <div class="modal-section-title" id="txt-modal-step1">👨‍🌾 ૧. હવે પછીનું તાત્કાલિક પગલું (Action Steps):</div>
+                <div class="modal-section-title" id="txt-modal-step1">👨‍🌾 ૧. તાત્કાલિક પગલાં:</div>
                 <div id="modal-action-text" class="modal-text">--</div>
             </div>
-
             <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
-                <div class="modal-section-title" style="color:#004d40;" id="txt-modal-step2">🏢 ૨. કોનો સંપર્ક કરવો (Expert Advisory):</div>
+                <div class="modal-section-title" style="color:#004d40;" id="txt-modal-step2">🏢 ૨. કોનો સંપર્ક કરવો:</div>
                 <div id="modal-contact-text" class="modal-text">--</div>
             </div>
-
             <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
-                <div class="modal-section-title" style="color:#1b5e20;" id="txt-modal-step3">🛡️ ૩. ભવિષ્યમાં સામનો કેવી રીતે કરવો (Future Prevention):</div>
+                <div class="modal-section-title" style="color:#1b5e20;" id="txt-modal-step3">🛡️ ૩. ભવિષ્યમાં બચાવ:</div>
                 <div id="modal-future-text" class="modal-text">--</div>
             </div>
         </div>
     </div>
+
+    <div class="toast" id="toast"></div>
+    <button class="install-btn" id="install-btn" onclick="installPWA()">📱 એપ ઇન્સ્ટોલ કરો</button>
 
     <div class="footer" id="txt-footer">
         © આંતરોલ પ્રાથમિક શાળા - ગણિત-વિજ્ઞાન અને પર્યાવરણ પ્રદર્શન
@@ -339,143 +443,250 @@
         let isCameraActive = false;
         let currentTopClass = "";
         let currentLang = "gu";
+        let currentConfidence = 0;
+        let lastLocation = "થરાદ";
+        let deferredPrompt = null;
 
+        /* ============ THEME & FONT ============ */
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            const isDark = document.body.classList.contains("dark-mode");
+            localStorage.setItem("darkMode", isDark ? "on" : "off");
+            document.getElementById("dark-btn").innerText = isDark ? "☀️" : "🌙";
+        }
+        if (localStorage.getItem("darkMode") === "on") {
+            document.body.classList.add("dark-mode");
+            document.getElementById("dark-btn").innerText = "☀️";
+        }
+
+        let fontSize = parseInt(localStorage.getItem("fontSize") || "100");
+        function applyFontSize() {
+            document.body.style.fontSize = fontSize + "%";
+            localStorage.setItem("fontSize", fontSize);
+        }
+        function increaseFont() { if (fontSize < 130) { fontSize += 10; applyFontSize(); } }
+        function decreaseFont() { if (fontSize > 80) { fontSize -= 10; applyFontSize(); } }
+        applyFontSize();
+
+        /* ============ TAB ============ */
         function switchTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            
             document.getElementById(tabId).classList.add('active');
             btnElement.classList.add('active');
+            if (tabId === 'history-tab') renderHistory();
+            if (tabId === 'apmc-tab') showMarketRates();
         }
 
+        /* ============ TOAST ============ */
+        function showToast(msg) {
+            const t = document.getElementById("toast");
+            t.innerText = msg;
+            t.style.display = "block";
+            setTimeout(() => { t.style.display = "none"; }, 2500);
+        }
+
+        /* ============ WEATHER API (LIVE) ============ */
+        async function getLiveWeather() {
+            const statsEl = document.getElementById("txt-weather-stats");
+            const alertEl = document.getElementById("weather-alert");
+            const locEl = document.getElementById("weather-location");
+
+            try {
+                // Open-Meteo free API (no key needed)
+                let lat = 24.4, lon = 71.6; // default Tharad
+                try {
+                    const pos = await new Promise((res, rej) => {
+                        navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 });
+                    });
+                    lat = pos.coords.latitude;
+                    lon = pos.coords.longitude;
+                    locEl.innerText = `📍 લોકેશન: (${lat.toFixed(2)}, ${lon.toFixed(2)})`;
+                } catch(e) {
+                    locEl.innerText = "📍 લોકેશન: થરાદ (ડિફોલ્ટ)";
+                }
+
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation&timezone=auto`);
+                const data = await res.json();
+                const temp = Math.round(data.current.temperature_2m);
+                const humidity = data.current.relative_humidity_2m;
+                const wind = Math.round(data.current.wind_speed_10m);
+                const rain = data.current.precipitation;
+
+                statsEl.innerHTML = `🌡️ તાપમાન: <b>${temp}°C</b> | 💧 ભેજ: <b>${humidity}%</b><br>💨 પવન: <b>${wind} km/h</b> | 🌧️ વરસાદ: <b>${rain} mm</b>`;
+
+                if (humidity > 70) {
+                    alertEl.innerText = `⚠️ ભેજ ${humidity}% છે - ટિક્કા/ફૂગ રોગનું જોખમ વધુ!`;
+                    alertEl.style.color = "#c62828";
+                } else if (humidity < 40) {
+                    alertEl.innerText = `⚠️ ભેજ ઓછો છે - પિયત આપવાની જરૂર છે.`;
+                    alertEl.style.color = "#f57c00";
+                } else {
+                    alertEl.innerText = `✅ હાલ હવામાન પાક માટે અનુકૂળ છે.`;
+                    alertEl.style.color = "#2e7d32";
+                }
+            } catch(e) {
+                statsEl.innerHTML = `🌡️ તાપમાન: <b>31°C</b> | 💧 ભેજ: <b>78%</b> (ઓફલાઇન ડેટા)`;
+                alertEl.innerText = "⚠️ લાઇવ વેધર મળ્યું નહીં, અંદાજિત ડેટા બતાવાય છે.";
+            }
+        }
+        getLiveWeather();
+        setInterval(getLiveWeather, 600000); // દર 10 મિનિટે
+
+        /* ============ APMC RATES ============ */
         const apmcRates = {
             tharad: [
-                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૫૦ - ₹૧,૫૪૦ / ૨૦ કિલો" },
-                { crop: "રાયડો (Mustard)", price: "₹૧,૦૫૦ - ₹૧,૨૨૦ / ૨૦ કિલો" },
-                { crop: "જીરું (Cumin)", price: "₹૪,૫૦૦ - ₹૫,૮૦૦ / ૨૦ કિલો" },
-                { crop: "કપાસ (Cotton)", price: "₹૧,૪૫૦ - ₹૧,૭૨૦ / ૨૦ કિલો" },
-                { crop: "એરંડા (Castor)", price: "₹૧,૧૮૦ - ₹૧,૩૧૦ / ૨૦ કિલો" }
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૫૦ - ₹૧,૫૪૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "રાયડો (Mustard)", price: "₹૧,૦૫૦ - ₹૧,૨૨૦ / ૨૦ કિલો", change: "↓" },
+                { crop: "જીરું (Cumin)", price: "₹૪,૫૦૦ - ₹૫,૮૦૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "કપાસ (Cotton)", price: "₹૧,૪૫૦ - ₹૧,૭૨૦ / ૨૦ કિલો", change: "—" },
+                { crop: "એરંડા (Castor)", price: "₹૧,૧૮૦ - ₹૧,૩૧૦ / ૨૦ કિલો", change: "↑" }
             ],
             deesa: [
-                { crop: "બટાટા (Potato)", price: "₹૨૪૦ - ₹૩૮૦ / ૨૦ કિલો" },
-                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૨૦ - ₹૧,૫૨૦ / ૨૦ કિલો" },
-                { crop: "રાયડો (Mustard)", price: "₹૧,૦૪૦ - ₹૧,૨૧૦ / ૨૦ કિલો" },
-                { crop: "જીરું (Cumin)", price: "₹૪,૪૦૦ - ₹૫,૭૫૦ / ૨૦ કિલો" }
+                { crop: "બટાટા (Potato)", price: "₹૨૪૦ - ₹૩૮૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૨૦ - ₹૧,૫૨૦ / ૨૦ કિલો", change: "↓" },
+                { crop: "રાયડો (Mustard)", price: "₹૧,૦૪૦ - ₹૧,૨૧૦ / ૨૦ કિલો", change: "—" },
+                { crop: "જીરું (Cumin)", price: "₹૪,૪૦૦ - ₹૫,૭૫૦ / ૨૦ કિલો", change: "↑" }
             ],
             vav: [
-                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૪૦ - ₹૧,૫૩૦ / ૨૦ કિલો" },
-                { crop: "બાજરી (Millet)", price: "₹૪૨૦ - ₹૫૧૦ / ૨૦ કિલો" },
-                { crop: "જીરું (Cumin)", price: "₹૪,૪૫૦ - ₹૫,૭૦૦ / ૨૦ કિલો" },
-                { crop: "ગવાર (Guar)", price: "₹950 - ₹૧,૧૨૦ / ૨૦ કિલો" }
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૪૦ - ₹૧,૫૩૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "બાજરી (Millet)", price: "₹૪૨૦ - ₹૫૧૦ / ૨૦ કિલો", change: "—" },
+                { crop: "જીરું (Cumin)", price: "₹૪,૪૫૦ - ₹૫,૭૦૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "ગવાર (Guar)", price: "₹૯૫૦ - ₹૧,૧૨૦ / ૨૦ કિલો", change: "↓" }
             ],
             palanpur: [
-                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૬૦ - ₹૧,૫૫૦ / ૨૦ કિલો" },
-                { crop: "રાયડો (Mustard)", price: "₹૧,૦૬૦ - ₹૧,૨૩૦ / ૨૦ કિલો" },
-                { crop: "ઘઉં (Wheat)", price: "₹૪૬૦ - ₹૫૫૦ / ૨૦ કિલો" },
-                { crop: "એરંડા (Castor)", price: "₹૧,૧૯૦ - ₹૧,૩૨૫ / ૨૦ કિલો" }
+                { crop: "મગફળી (Groundnut)", price: "₹૧,૨૬૦ - ₹૧,૫૫૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "રાયડો (Mustard)", price: "₹૧,૦૬૦ - ₹૧,૨૩૦ / ૨૦ કિલો", change: "—" },
+                { crop: "ઘઉં (Wheat)", price: "₹૪૬૦ - ₹૫૫૦ / ૨૦ કિલો", change: "↑" },
+                { crop: "એરંડા (Castor)", price: "₹૧,૧૯૦ - ₹૧,૩૨૫ / ૨૦ કિલો", change: "↓" }
             ]
         };
 
         function showMarketRates() {
             const selectedVal = document.getElementById("market-select").value;
             const rates = apmcRates[selectedVal] || apmcRates["tharad"];
-            
-            let html = `<table class="rate-table"><tr><th>પાકનું નામ</th><th>આજનો ભાવ (રૂ.)</th></tr>`;
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('gu-IN') + " " + now.toLocaleTimeString('gu-IN', { hour: '2-digit', minute: '2-digit' });
+            const timeEl = document.getElementById("apmc-update-time");
+            if (timeEl) timeEl.innerText = timeStr;
+
+            let html = `<table class="rate-table"><tr><th>પાક</th><th>આજનો ભાવ</th><th>બદલાવ</th></tr>`;
             rates.forEach(item => {
-                html += `<tr><td><b>${item.crop}</b></td><td>${item.price}</td></tr>`;
+                const color = item.change === "↑" ? "#2e7d32" : item.change === "↓" ? "#c62828" : "#666";
+                html += `<tr><td><b>${item.crop}</b></td><td>${item.price}</td><td style="color:${color}; font-weight:bold; text-align:center;">${item.change}</td></tr>`;
             });
             html += `</table>`;
-            
             document.getElementById("market-rate-result").innerHTML = html;
         }
 
-        // 🎙️ VOICE INPUT RECOGNITION FEATURE
+        /* ============ FERTILIZER CALCULATOR ============ */
+        const fertilizerData = {
+            groundnut: { urea: 10, dap: 12.5, mop: 8, name: "મગફળી" },
+            cotton:    { urea: 25, dap: 8,    mop: 6, name: "કપાસ" },
+            wheat:     { urea: 20, dap: 6,    mop: 2, name: "ઘઉં" },
+            bajra:     { urea: 12, dap: 5,    mop: 2, name: "બાજરી" },
+            cumin:     { urea: 8,  dap: 10,   mop: 4, name: "જીરું" },
+            castor:    { urea: 15, dap: 10,   mop: 5, name: "એરંડા" }
+        };
+        const soilMultiplier = { low: 1.2, medium: 1.0, high: 0.85 };
+
+        function calculateFertilizer() {
+            const vigha = parseFloat(document.getElementById("vigha-input").value);
+            const cropKey = document.getElementById("crop-select").value;
+            const soilKey = document.getElementById("soil-select").value;
+            const resDiv = document.getElementById("calc-result");
+            const t = translations[currentLang];
+
+            if (!vigha || vigha <= 0) {
+                resDiv.innerHTML = `<span style="color:#d32f2f;">⚠️ ${t.errInput}</span>`;
+                return;
+            }
+
+            const crop = fertilizerData[cropKey];
+            const mult = soilMultiplier[soilKey];
+            const urea = (vigha * crop.urea * mult).toFixed(1);
+            const dap  = (vigha * crop.dap  * mult).toFixed(1);
+            const mop  = (vigha * crop.mop  * mult).toFixed(1);
+
+            if (currentLang === "gu") {
+                resDiv.innerHTML = `🌱 <b>${crop.name}</b> માટે જરૂરી ખાતર:<br>• યુરિયા: <b>${urea} કિલો</b><br>• DAP: <b>${dap} કિલો</b><br>• MOP (પોટાશ): <b>${mop} કિલો</b><br><br>💡 વાવણી સમયે અડધું DAP, પછી ૩૦ દિવસે યુરિયા આપવું.`;
+            } else if (currentLang === "hi") {
+                resDiv.innerHTML = `🌱 <b>${crop.name}</b> के लिए आवश्यक उर्वरक:<br>• यूरिया: <b>${urea} किग्रा</b><br>• DAP: <b>${dap} किग्रा</b><br>• MOP (पोटाश): <b>${mop} किग्रा</b>`;
+            } else {
+                resDiv.innerHTML = `🌱 Fertilizer for <b>${crop.name}</b>:<br>• Urea: <b>${urea} kg</b><br>• DAP: <b>${dap} kg</b><br>• MOP: <b>${mop} kg</b>`;
+            }
+        }
+
+        /* ============ VOICE INPUT ============ */
         function startVoiceRecognition() {
             const voiceStatus = document.getElementById("voice-status");
             const queryInput = document.getElementById("query-input");
 
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("તમારા બ્રાઉઝરમાં વોઈસ ટાઈપિંગ સપોર્ટ કરતું નથી.");
+                alert("તમારા બ્રાઉઝરમાં વોઈસ ટાઈપિંગ સપોર્ટ નથી.");
                 return;
             }
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             const recognition = new SpeechRecognition();
-
             recognition.lang = currentLang === 'hi' ? 'hi-IN' : (currentLang === 'en' ? 'en-US' : 'gu-IN');
             recognition.interimResults = false;
 
-            recognition.onstart = function() {
-                voiceStatus.innerText = "🎙️ બોલો, રેકોર્ડિંગ ચાલુ છે...";
-            };
-
-            recognition.onspeechend = function() {
-                voiceStatus.innerText = "";
-                recognition.stop();
-            };
-
-            recognition.onresult = function(event) {
+            recognition.onstart = () => { voiceStatus.innerText = "🎙️ બોલો, રેકોર્ડિંગ ચાલુ છે..."; };
+            recognition.onspeechend = () => { voiceStatus.innerText = ""; recognition.stop(); };
+            recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 queryInput.value = transcript;
-                voiceStatus.innerText = "✅ બોલાયેલ પ્રશ્ન ઉમેરાઈ ગયો.";
+                voiceStatus.innerText = "✅ પ્રશ્ન ઉમેરાઈ ગયો.";
                 getAgriAdvice();
             };
-
-            recognition.onerror = function(event) {
-                voiceStatus.innerText = "⚠️ અવાજ ઓળખવામાં ભૂલ થઈ. ફરી પ્રયાસ કરો.";
-            };
-
+            recognition.onerror = () => { voiceStatus.innerText = "⚠️ અવાજ ઓળખવામાં ભૂલ."; };
             recognition.start();
         }
 
-        // 🧠 EXPANDED AGRI ADVISORY WITH MULTIPLE SOLUTIONS, GOOGLE & YOUTUBE LINKS
+        /* ============ AGRI ADVISOR ============ */
         function getAgriAdvice() {
             const query = document.getElementById("query-input").value.trim();
             const resDiv = document.getElementById("query-result");
-
             if (!query) {
-                resDiv.innerHTML = "<span style='color:#d32f2f;'>⚠️ મહેરબાની કરીને તમારો પ્રશ્ન બોલો અથવા ટાઈપ કરો.</span>";
+                resDiv.innerHTML = "<span style='color:#d32f2f;'>⚠️ પ્રશ્ન બોલો અથવા ટાઈપ કરો.</span>";
                 return;
             }
-
             const qLower = query.toLowerCase();
             let matchedAdvice = "";
 
             if (qLower.includes("પીળા") || qLower.includes("yellow")) {
-                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> પાંદડા પીળા પડવાનું મુખ્ય કારણ નાઇટ્રોજન, સલ્ફર અથવા લોહતત્વ (Iron Deficiency) ની ઉણપ છે.<br>• <b>ઉપાય:</b> ૧૯:૧૯:૧૯ ખાતર (૫૦ ગ્રામ/૧૫ લીટર) અથવા ફેરસ સલ્ફેટ (૩૦ ગ્રામ) + લીંબુના ફૂલ સાથે છંટકાવ કરવો. પિયત સાથે યુરિયા આપવું.";
-            } else if (qLower.includes("સુકારો") || qLower.includes("મૂળ") || qLower.includes("રોટ") || qLower.includes("wilt")) {
-                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> ફૂગના કારણે છોડના મૂળ સુકાઈ જાય છે (Mould / Stem Rot).<br>• <b>ઉપાય:</b> ટ્રાઇકોડર્મા હરઝિયાનામ (૧ કિલો/એકર) સેન્દ્રીય ખાતર સાથે આપવું અથવા કાર્બેન્ડાઝીમ + મૅન્કોઝેબ (સાફ) દવાનું પિયત પાણી સાથે ડ્રેન્ચિંગ કરવું.";
-            } else if (qLower.includes("ઈયળ") || qLower.includes("જીવાત") || qLower.includes("કાટર") || qLower.includes("worm")) {
-                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> લશ્કરી ઈયળ અથવા લીલી ઈયળનો ઉપદ્રવ.<br>• <b>ઉપાય:</b> ઈમામેક્ટીન બેન્ઝોએટ ૫% SG (૭ ગ્રામ/૧૫ લીટર) અથવા ક્લોરેન્ટ્રાનીલીપ્રોલ (કોરાજન - ૪ મિલી/૧૫ લીટર) નો સાંજના સમયે છંટકાવ કરવો.";
-            } else if (qLower.includes("ટિક્કા") || qLower.includes("ડબ્બા") || qLower.includes("ટપકા") || qLower.includes("tikka")) {
-                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> સેર્કોસ્પોરા ફૂગના કારણે પાંદડા પર કાળા ડાઘ પડે છે.<br>• <b>ઉપાય:</b> ટેબુકોનાઝોલ + ટ્રિફ્લોક્સીસ્ટ્રોબિન (નેટિવો - ૧૦ ગ્રામ/૧૫ લીટર) અથવા મેન્કોઝેબ ૭૫% (૩૦ ગ્રામ) નો છંટકાવ કરવો.";
-            } else if (qLower.includes("તળછારો") || qLower.includes("મશી") || qLower.includes("મોલો") || qLower.includes("aphid")) {
-                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> રસચૂસિયા જીવાત (મોલો-મશી/ચિપ્સ) નો ઉપદ્રવ.<br>• <b>ઉપાય:</b> ઈમિડાક્લોપ્રિડ ૧૭.૮% SL (૪ મિલી/૧૫ લીટર) અથવા થામેથોક્સમ ૨૫% WG (૫ ગ્રામ/૧૫ લીટર) નો છંટકાવ કરવો.";
+                matchedAdvice = "<b>💡 નિરાકરણ:</b><br>• <b>કારણ:</b> નાઇટ્રોજન/આયર્નની ઉણપ.<br>• <b>ઉપાય:</b> ૧૯:૧૯:૧૯ (૫૦ ગ્રામ/૧૫ લીટર) અથવા ફેરસ સલ્ફેટ (૩૦ ગ્રામ) છંટકાવ.";
+            } else if (qLower.includes("સુકારો") || qLower.includes("રોટ") || qLower.includes("wilt")) {
+                matchedAdvice = "<b>💡 નિરાકરણ:</b><br>• <b>કારણ:</b> ફૂગથી મૂળ સુકાય.<br>• <b>ઉપાય:</b> ટ્રાઇકોડર્મા (૧ કિલો/એકર) અથવા કાર્બેન્ડાઝીમ + મૅન્કોઝેબ ડ્રેન્ચિંગ.";
+            } else if (qLower.includes("ઈયળ") || qLower.includes("જીવાત") || qLower.includes("worm")) {
+                matchedAdvice = "<b>💡 નિરાકરણ:</b><br>• <b>ઉપાય:</b> ઈમામેક્ટીન બેન્ઝોએટ ૫% SG (૭ ગ્રામ/૧૫ લીટર) સાંજે છંટકાવ.";
+            } else if (qLower.includes("ટિક્કા") || qLower.includes("ટપકા") || qLower.includes("tikka")) {
+                matchedAdvice = "<b>💡 નિરાકરણ:</b><br>• <b>ઉપાય:</b> ટેબુકોનાઝોલ + ટ્રિફ્લોક્સીસ્ટ્રોબિન (નેટિવો - ૧૦ ગ્રામ/૧૫ લીટર) છંટકાવ.";
+            } else if (qLower.includes("મશી") || qLower.includes("મોલો") || qLower.includes("aphid")) {
+                matchedAdvice = "<b>💡 નિરાકરણ:</b><br>• <b>ઉપાય:</b> ઈમિડાક્લોપ્રિડ ૧૭.૮% SL (૪ મિલી/૧૫ લીટર) છંટકાવ.";
             } else if (qLower.includes("ઉધઈ") || qLower.includes("termite")) {
-                matchedAdvice = "<b>💡 વિસ્તૃત નિષ્ણાત નિરાકરણ:</b><br>• <b>કારણ:</b> જમીનમાં ભેજ ઓછો હોવાથી ઉધઈ મૂળને નુકસાન કરે છે.<br>• <b>ઉપાય:</b> ક્લોરપાયરીફોસ ૨૦% EC (૧ લીટર/એકર) પિયતના પાણી સાથે આપવું.";
+                matchedAdvice = "<b>💡 નિરાકરણ:</b><br>• <b>ઉપાય:</b> ક્લોરપાયરીફોસ ૨૦% EC (૧ લી/એકર) પિયત સાથે.";
             }
 
-            let googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + " ખેતી ઉપાય કૃષિ રોગ નિયંત્રણ")}`;
-            let youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query + " ખેતી ઇલાજ")}`;
+            const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query + " ખેતી ઉપાય")}`;
+            const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query + " ખેતી ઇલાજ")}`;
 
-            let htmlOutput = "";
-            if (matchedAdvice !== "") {
-                htmlOutput += `<div style='margin-bottom:8px; line-height:1.5;'>${matchedAdvice}</div>`;
-            } else {
-                htmlOutput += `<div style='margin-bottom:8px;'><b>ℹ️ ઓટોમેટેડ કૃષિ સલાહ:</b> આપના પ્રશ્ન માટે વધુ વિગતવાર માહિતી અને વિડીયો નીચે આપેલા માધ્યમથી મેળવો.</div>`;
-            }
+            let htmlOutput = matchedAdvice !== "" 
+                ? `<div style='margin-bottom:8px; line-height:1.5;'>${matchedAdvice}</div>`
+                : `<div style='margin-bottom:8px;'><b>ℹ️ વધુ માહિતી નીચેના માધ્યમથી મેળવો:</b></div>`;
 
             htmlOutput += `
                 <div style="margin-top: 10px; display:flex; gap:8px; flex-wrap:wrap;">
-                    <button class="btn-google" onclick="window.open('${googleSearchUrl}', '_blank')">🔍 Google પર ઉત્તર શોધો</button>
-                    <button class="btn-youtube" onclick="window.open('${youtubeSearchUrl}', '_blank')">▶️ YouTube વિડીયો જુઓ</button>
-                    <a class="btn-call" href="tel:18001801551">📞 કિસાન કૉલ સેન્ટર (૧૮૦૦-૧૮૦-૧૫૫૧)</a>
+                    <button class="btn-google" onclick="window.open('${googleSearchUrl}', '_blank')">🔍 Google</button>
+                    <button class="btn-youtube" onclick="window.open('${youtubeSearchUrl}', '_blank')">▶️ YouTube</button>
+                    <a class="btn-call" href="tel:18001801551">📞 1800-180-1551</a>
                 </div>
             `;
-
             resDiv.innerHTML = htmlOutput;
         }
 
+        /* ============ TRANSLATIONS ============ */
         const translations = {
             gu: {
                 schoolName: "🏫 આંતરોલ પ્રાથમિક શાળા",
@@ -484,208 +695,204 @@
                 mentorBadge: "👨‍🏫 માર્ગદર્શક:",
                 student1Badge: "👨‍🎓 વિદ્યાર્થી ૧:",
                 student2Badge: "👨‍🎓 વિદ્યાર્થી ૨:",
-                newsTitle: "તાજા કૃષિ સમાચાર (Agri News Alert)",
+                newsTitle: "તાજા કૃષિ સમાચાર",
                 weatherTitle: "હવામાન સલાહ (Live Weather)",
-                weatherStats: "🌡️ તાપમાન: <b>31°C</b> | 💧 ભેજ: <b>78%</b>",
-                weatherAlert: "હવામાનમાં વધુ ભેજ હોવાથી 'ટિક્કા' અથવા 'ફૂગ' નો રોગ ફેલાવાની શક્યતા વધુ છે.",
-                calcTitle: "ખાતર કેલ્ક્યુલેટર (Fertilizer Calculator)",
-                calcDesc: "તમારા ખેતરનું ક્ષેત્રફળ (વીઘામાં) નાખો:",
+                calcTitle: "ખાતર કેલ્ક્યુલેટર",
                 calcBtn: "ગણતરી કરો",
                 placeholder: "ઉદા. 2",
                 btnCam: "📷 કૅમેરા ચાલુ કરો",
                 btnFile: "📁 ફોટો પસંદ કરો",
-                analysisTitle: "📊 રોગનું વિશ્લેષણ (Analysis):",
-                voiceBtn: "માર્ગદર્શન સાંભળો (Voice Assistant)",
-                waBtn: "વોટ્સએપ પર રિપોર્ટ મોકલો",
-                treatmentTitle: "💊 ત્વરિત ઈલાજ / દવાની સલાહ:",
-                preventionTitle: "🛡️ ભવિષ્યમાં રોગથી બચવાના આગોતરા ઉપાયો:",
-                moreBtn: "વધુ જાણો (વિગતવાર માર્ગદર્શન)",
-                modalTitle: "📖 રોગ વિશે વિગતવાર માર્ગદર્શન",
-                modalStep1: "👨‍🌾 ૧. હવે પછીનું તાત્કાલિક પગલું (Action Steps):",
-                modalStep2: "🏢 ૨. કોનો સંપર્ક કરવો (Expert Advisory):",
-                modalStep3: "🛡️ ૩. ભવિષ્યમાં સામનો કેવી રીતે કરવો (Future Prevention):",
-                footer: "© આંતરોલ પ્રાથમિક શાળા - ગણિત-વિજ્ઞાન અને પર્યાવરણ પ્રદર્શન",
-                healthyStatus: "✅ પાકની વર્તમાન સ્થિતિ:",
-                errInput: "મહેરબાની કરીને સાચું ક્ષેત્રફળ નાખો."
+                analysisTitle: "📊 રોગનું વિશ્લેષણ:",
+                voiceBtn: "🔊 માર્ગદર્શન સાંભળો",
+                waBtn: "📲 વોટ્સએપ પર મોકલો",
+                pdfBtn: "📄 PDF રિપોર્ટ ડાઉનલોડ કરો",
+                treatmentTitle: "💊 ત્વરિત ઈલાજ:",
+                preventionTitle: "🛡️ આગોતરા ઉપાયો:",
+                moreBtn: "ℹ️ વધુ જાણો",
+                modalTitle: "📖 વિગતવાર માર્ગદર્શન",
+                modalStep1: "👨‍🌾 ૧. તાત્કાલિક પગલાં:",
+                modalStep2: "🏢 ૨. કોનો સંપર્ક કરવો:",
+                modalStep3: "🛡️ ૩. ભવિષ્યમાં બચાવ:",
+                footer: "© આંતરોલ પ્રાથમિક શાળા - ગણિત-વિજ્ઞાન પ્રદર્શન",
+                healthyStatus: "✅ પાકની સ્થિતિ:",
+                errInput: "સાચું ક્ષેત્રફળ નાખો."
             },
             hi: {
                 schoolName: "🏫 आंतरोल प्राथमिक विद्यालय",
                 schoolLoc: "तहसील - थराद, जिला - वाव-थराद",
-                projTitle: "🌱 AI किसान मित्र (मूंगफली फसल रोग निदान)",
+                projTitle: "🌱 AI किसान मित्र (मूंगफली रोग निदान)",
                 mentorBadge: "👨‍🏫 मार्गदर्शक:",
                 student1Badge: "👨‍🎓 छात्र १:",
                 student2Badge: "👨‍🎓 छात्र २:",
-                newsTitle: "ताज़ा कृषि समाचार (Agri News Alert)",
-                weatherTitle: "मौसम सलाह (Live Weather)",
-                weatherStats: "🌡 तापमान: <b>31°C</b> | 💧 आर्द्रता: <b>78%</b>",
-                weatherAlert: "मौसम में अधिक नमी के कारण 'टिक्का' या 'फंगस' रोग फैलने की संभावना अधिक है।",
-                calcTitle: "उर्वरक कैलकुलेटर (Fertilizer Calculator)",
-                calcDesc: "अपने खेत का क्षेत्रफल (बीघा में) दर्ज करें:",
+                newsTitle: "ताज़ा कृषि समाचार",
+                weatherTitle: "मौसम सलाह",
+                calcTitle: "उर्वरक कैलकुलेटर",
                 calcBtn: "गणना करें",
                 placeholder: "उदा. 2",
-                btnCam: "📷 कैमरा चालू करें",
-                btnFile: "📁 फोटो चुनें",
-                analysisTitle: "📊 रोग विश्लेषण (Analysis):",
-                voiceBtn: "आवाज में सलाह सुनें (Voice Assistant)",
-                waBtn: "व्हाट्सएप पर रिपोर्ट भेजें",
-                treatmentTitle: "💊 तत्काल उपचार / दवा की सलाह:",
-                preventionTitle: "🛡️ भविष्य में बीमारी से बचने के उपाय:",
-                moreBtn: "अधिक जानें (विस्तृत जानकारी)",
-                modalTitle: "📖 बीमारी के बारे में विस्तृत जानकारी",
-                modalStep1: "👨‍🌾 १. अगला आवश्यक कदम (Action Steps):",
-                modalStep2: "🏢 ૨. किससे संपर्क करें (Expert Advisory):",
-                modalStep3: "🛡️ ૩. भविष्य में रोकथाम (Future Prevention):",
-                footer: "© आंतरोल प्राथमिक विद्यालय - गणित-विज्ञान एवं पर्यावरण प्रदर्शनी",
-                healthyStatus: "✅ फसल की वर्तमान स्थिति:",
-                errInput: "कृपया सही क्षेत्रफल दर्ज करें।"
+                btnCam: "📷 कैमरा",
+                btnFile: "📁 फोटो",
+                analysisTitle: "📊 रोग विश्लेषण:",
+                voiceBtn: "🔊 सलाह सुनें",
+                waBtn: "📲 व्हाट्सएप",
+                pdfBtn: "📄 PDF रिपोर्ट",
+                treatmentTitle: "💊 उपचार:",
+                preventionTitle: "🛡️ बचाव:",
+                moreBtn: "ℹ️ अधिक जानें",
+                modalTitle: "📖 विस्तृत जानकारी",
+                modalStep1: "👨‍🌾 १. तत्काल कदम:",
+                modalStep2: "🏢 २. संपर्क:",
+                modalStep3: "🛡️ ३. बचाव:",
+                footer: "© आंतरोल प्राथमिक विद्यालय",
+                healthyStatus: "✅ फसल स्थिति:",
+                errInput: "सही क्षेत्रफल दर्ज करें।"
             },
             en: {
                 schoolName: "🏫 Antrol Primary School",
                 schoolLoc: "Taluka - Tharad, District - Vav-Tharad",
                 projTitle: "🌱 AI Farmer Friend (Groundnut Disease Detection)",
-                mentorBadge: "👨‍‍🏫 Mentor:",
+                mentorBadge: "👨‍🏫 Mentor:",
                 student1Badge: "👨‍🎓 Student 1:",
                 student2Badge: "👨‍🎓 Student 2:",
-                newsTitle: "Latest Agri News Alerts",
+                newsTitle: "Latest Agri News",
                 weatherTitle: "Weather Advisory",
-                weatherStats: "🌡️ Temp: <b>31°C</b> | 💧 Humidity: <b>78%</b>",
-                weatherAlert: "High humidity increases the risk of Tikka or Fungal diseases.",
-                calcTitle: "Soil Fertilizer Calculator",
-                calcDesc: "Enter your farm area (in Vigha):",
+                calcTitle: "Fertilizer Calculator",
                 calcBtn: "Calculate",
                 placeholder: "e.g. 2",
                 btnCam: "📷 Start Camera",
                 btnFile: "📁 Upload Photo",
                 analysisTitle: "📊 Disease Analysis:",
-                voiceBtn: "Listen Voice Advisory",
-                waBtn: "Share Report on WhatsApp",
-                treatmentTitle: "💊 Instant Treatment / Remedy:",
-                preventionTitle: "🛡️ Future Prevention Advisory:",
-                moreBtn: "Know More (Detailed Advisory)",
-                modalTitle: "📖 Detailed Disease Advisory",
-                modalStep1: "👨‍🌾 1. Immediate Action Steps:",
-                modalStep2: "🏢 2. Whom to Contact:",
-                modalStep3: "🛡️ 3. Future Prevention:",
-                footer: "© Antrol Primary School - Science & Environment Fair",
-                healthyStatus: "✅ Current Crop Status:",
-                errInput: "Please enter a valid area."
+                voiceBtn: "🔊 Listen Advisory",
+                waBtn: "📲 Share WhatsApp",
+                pdfBtn: "📄 Download PDF",
+                treatmentTitle: "💊 Treatment:",
+                preventionTitle: "🛡️ Prevention:",
+                moreBtn: "ℹ️ Know More",
+                modalTitle: "📖 Detailed Advisory",
+                modalStep1: "👨‍🌾 1. Immediate Steps:",
+                modalStep2: "🏢 2. Contact:",
+                modalStep3: "🛡️ 3. Prevention:",
+                footer: "© Antrol Primary School",
+                healthyStatus: "✅ Crop Status:",
+                errInput: "Enter valid area."
             }
         };
 
+        /* ============ DISEASE DATA ============ */
         const diseaseDataMulti = {
             gu: {
                 "Healthy Leaf": {
                     treatment: "પાક સંપૂર્ણપણે સ્વસ્થ છે! કોઈ દવાની જરૂર નથી.",
-                    prevention: "• યોગ્ય સમયે જમીનમાં પૂરતો ભેજ જાળવવો.\n• સમતોલ ખાતર (NPK) નો જ ઉપયોગ કરવો.",
-                    action: "• હાલ કોઈ રાસાયણિક છંટકાવની જરૂર નથી.\n• દર ૩-૪ દિવસે ખેતરનું નિરીક્ષણ ચાલુ રાખવું.",
-                    contact: "• માર્ગદર્શન માટે કિસાન કૉલ સેન્ટર (1800-180-1551) પર સંપર્ક કરવો.",
-                    future: "• જમીનની ફળદ્રુપતા વધારવા માટે દેશી છાણિયું ખાતર વાપરવું."
+                    prevention: "• યોગ્ય સમયે પિયત આપવું.\n• સમતોલ ખાતર (NPK) વાપરવું.",
+                    action: "• કોઈ છંટકાવની જરૂર નથી.\n• દર ૩-૪ દિવસે નિરીક્ષણ કરો.",
+                    contact: "• કિસાન કૉલ સેન્ટર: 1800-180-1551",
+                    future: "• જમીનની ફળદ્રુપતા માટે છાણિયું ખાતર વાપરો."
                 },
                 "Tikka Disease": {
-                    treatment: "મેન્કોઝેબ ૭૫% WP (૨૭ ગ્રામ) અથવા કાર્બેન્ડાઝીમ (૧૦ ગ્રામ) ૧૦ લીટર પાણીમાં ભેળવી છંટકાવ કરવો.",
-                    prevention: "• વાવણી પહેલાં બિયારણને દવાની પટ આપવી (Seed Treatment).\n• પાકની ફેરબદલી (Crop Rotation) કરવી.",
-                    action: "• રોગગ્રસ્ત નીચેના પાંદડા તોડીને ખેતર બહાર દૂર સળગાવી દેવા.\n• ભેજવાળા વાતાવરણમાં છંટકાવ વહેલી સવારે અથવા સાંજે કરવો.",
-                    contact: "• નજીકના તાલુકા કૃષિ સેવા કેન્દ્રનો સંપર્ક કરવો.\n• કિસાન કૉલ સેન્ટર: 1800-180-1551 (Toll Free)",
-                    future: "• આગામી સીઝનમાં વાવણી પહેલાં બીજને ટ્રાઇકોડર્મા ની પટ અચૂક આપવી."
+                    treatment: "મેન્કોઝેબ ૭૫% WP (૨૭ ગ્રામ) અથવા કાર્બેન્ડાઝીમ (૧૦ ગ્રામ) ૧૦ લીટર પાણીમાં ભેળવી છંટકાવ કરો.",
+                    prevention: "• વાવણી પહેલાં બિયારણની પટ આપો.\n• પાકની ફેરબદલી કરો.",
+                    action: "• રોગગ્રસ્ત પાંદડા તોડી દૂર સળગાવો.\n• સવારે/સાંજે છંટકાવ કરો.",
+                    contact: "• તાલુકા કૃષિ સેવા કેન્દ્ર.\n• કિસાન કૉલ સેન્ટર: 1800-180-1551",
+                    future: "• આગામી સીઝનમાં ટ્રાઇકોડર્મા પટ આપો."
                 },
                 "Rust Disease": {
-                    treatment: "ગેરુના નિયંત્રણ માટે ટેબુકોનાઝોલ કે હેક્ઝાકોનાઝોલ દવાનો છંટકાવ કરવો.",
-                    prevention: "• રોગ પ્રતિકારક જાતોનું વાવેતર કરવું.\n• બે છોડ વચ્ચે યોગ્ય અંતર રાખવું.",
-                    action: "• પાકમાં વધુ પડતો યુરિયા (નાઇટ્રોજન) ખાતરનો ઉપયોગ ત્વરિત અટકાવવો.",
-                    contact: "• વિસ્તરણ અધિકારી (કૃષિ) નો સંપર્ક કરવો.",
-                    future: "• ભવિષ્યમાં રોગ પ્રતિકારક જાતો પસંદ કરવી."
+                    treatment: "ટેબુકોનાઝોલ કે હેક્ઝાકોનાઝોલ છંટકાવ કરો.",
+                    prevention: "• પ્રતિકારક જાતો વાવો.\n• છોડ વચ્ચે અંતર રાખો.",
+                    action: "• વધુ યુરિયા અટકાવો.",
+                    contact: "• કૃષિ વિસ્તરણ અધિકારી.",
+                    future: "• પ્રતિકારક જાતો પસંદ કરો."
                 },
                 "Alternaria Blight": {
-                    treatment: "કોપર ઓક્સીક્લોરાઇડ ૫૦% WP (૩૦ ગ્રામ) ૧૫ લીટર પાણીમાં ઉમેરી છંટકાવ કરવો.",
-                    prevention: "• પાક પર વધુ પડતો નાઇટ્રોજન ખાતરનો ઉપયોગ અટકાવવો.",
-                    action: "• ખેતરમાંથી રોગગ્રસ્ત પાંદડા દૂર કરવા.",
-                    contact: "• કિસાન કૉલ સેન્ટર: 1800-180-1551 પર સંપર્ક કરવો.",
-                    future: "• પ્રમાણિત બિયારણ જ વાપરવું."
+                    treatment: "કોપર ઓક્સીક્લોરાઇડ ૫૦% WP (૩૦ ગ્રામ) ૧૫ લીટરમાં છંટકાવ.",
+                    prevention: "• વધુ નાઇટ્રોજન અટકાવો.",
+                    action: "• રોગગ્રસ્ત પાંદડા દૂર કરો.",
+                    contact: "• કિસાન કૉલ સેન્ટર: 1800-180-1551",
+                    future: "• પ્રમાણિત બિયારણ વાપરો."
                 },
                 "Default": {
-                    treatment: "પાકનું નિરીક્ષણ કરી યોગ્ય જંતુનાશક વાપરવી.",
-                    prevention: "નિયમિતપણે ખેતરની મુલાકાત લઈ નિષ્ણાતની સલાહ લેવી.",
-                    action: "• પાકના તાજા લક્ષણોવાળા પાંદડા લઈ નિષ્ણાતને બતાવવા.",
-                    contact: "• કિસાન કૉલ સેન્ટર ટોલ ફ્રી નંબર: 1800-180-1551 પર ફોન કરવો.",
-                    future: "• પાકને સમતોલ પોષણ આપવું અને ખેતરની સ્વચ્છતા જાળવવી."
+                    treatment: "પાકનું નિરીક્ષણ કરી યોગ્ય જંતુનાશક વાપરો.",
+                    prevention: "નિયમિત ખેતર મુલાકાત અને નિષ્ણાત સલાહ.",
+                    action: "• લક્ષણવાળા પાંદડા નિષ્ણાતને બતાવો.",
+                    contact: "• 1800-180-1551 (ટોલ ફ્રી)",
+                    future: "• સમતોલ પોષણ અને સ્વચ્છતા."
                 }
             },
             hi: {
                 "Healthy Leaf": {
-                    treatment: "फसल पूरी तरह स्वस्थ है! किसी दवा की आवश्यकता नहीं है।",
-                    prevention: "• समय पर सिंचाई करें और मिट्टी में नमी बनाए रखें।\n• संतुलित उर्वरक (NPK) का ही उपयोग करें।",
-                    action: "• किसी भी रासायनिक स्प्रे की आवश्यकता नहीं है।\n• हर 3-4 दिनों में खेत का निरीक्षण करते रहें।",
-                    contact: "• अधिक जानकारी के लिए किसान कॉल सेंटर (1800-180-1551) पर संपर्क करें।",
-                    future: "• मिट्टी की उर्वरता बढ़ाने के लिए जैविक खाद का उपयोग करें।"
+                    treatment: "फसल पूरी तरह स्वस्थ है!",
+                    prevention: "• समय पर सिंचाई।\n• संतुलित NPK।",
+                    action: "• कोई स्प्रे नहीं।\n• 3-4 दिन में निरीक्षण।",
+                    contact: "• किसान कॉल सेंटर: 1800-180-1551",
+                    future: "• जैविक खाद का उपयोग।"
                 },
                 "Tikka Disease": {
-                    treatment: "मैनकोज़ेब 75% WP (27 ग्राम) या कार्बेन्डाज़िम (10 ग्राम) 10 लीटर पानी में मिलाकर छिड़काव करें।",
-                    prevention: "• बुवाई से पहले बीजों का उपचार (Seed Treatment) करें।\n• फसल चक्र (Crop Rotation) अपनाएं।",
-                    action: "• संक्रमित पत्तियों को तोड़कर खेत से दूर नष्ट कर दें।\n• छिड़काव सुबह या शाम के समय करें।",
-                    contact: "• नजदीकी कृषि सेवा केंद्र या किसान कॉल सेंटर (1800-180-1551) पर संपर्क करें।",
-                    future: "• अगली फसल की बुवाई से पहले बीजों को ट्राइकोडर्मा से उपचारित करें।"
+                    treatment: "मैनकोज़ेब 75% WP (27g) या कार्बेन्डाज़िम (10g) 10 लीटर पानी में छिड़काव।",
+                    prevention: "• बीज उपचार।\n• फसल चक्र।",
+                    action: "• संक्रमित पत्तियां नष्ट करें।",
+                    contact: "• कृषि सेवा केंद्र।\n• 1800-180-1551",
+                    future: "• ट्राइकोडर्मा उपचार।"
                 },
                 "Rust Disease": {
-                    treatment: "गेरू (Rust) के नियंत्रण के लिए टेबूकोनाज़ोल या हेक्साकोनाज़ोल का छिड़काव करें।",
-                    prevention: "• रोग प्रतिरोधी किस्मों की बुवाई करें।\n• दो पौधों के बीच उचित दूरी बनाए रखें।",
-                    action: "• फसल में अधिक यूरिया का उपयोग तुरंत रोकें।",
-                    contact: "• स्थानीय कृषि अधिकारी या विशेषज्ञ से संपर्क करें।",
-                    future: "• भविष्य में रोग प्रतिरोधी किस्मों का चयन करें।"
+                    treatment: "टेबूकोनाज़ोल या हेक्साकोनाज़ोल छिड़काव।",
+                    prevention: "• प्रतिरोधी किस्में।",
+                    action: "• यूरिया कम करें।",
+                    contact: "• कृषि अधिकारी।",
+                    future: "• प्रतिरोधी किस्में।"
                 },
                 "Alternaria Blight": {
-                    treatment: "कॉपर ऑक्सीक्लोराइड 50% WP (30 ग्राम) 15 लीटर पानी में मिलाकर छिड़काव करें।",
-                    prevention: "• फसल पर अधिक नाइट्रोजन उर्वरक का प्रयोग रोकें।",
-                    action: "• खेत से संक्रमित पत्तियों को हटा दें।",
-                    contact: "• किसान कॉल सेंटर: 1800-180-1551 पर संपर्क करें।",
-                    future: "• केवल प्रमाणित बीजों का ही उपयोग करें।"
+                    treatment: "कॉपर ऑक्सीक्लोराइड 50% WP (30g) 15L में।",
+                    prevention: "• नाइट्रोजन कम करें।",
+                    action: "• पत्तियां हटाएं।",
+                    contact: "• 1800-180-1551",
+                    future: "• प्रमाणित बीज।"
                 },
                 "Default": {
-                    treatment: "फसल का निरीक्षण करें और उपयुक्त कीटनाशक का प्रयोग करें।",
-                    prevention: "नियमित रूप से खेत का दौरा करें और विशेषज्ञ की सलाह लें।",
-                    action: "• प्रभावित पत्तियों को लेकर विशेषज्ञ को दिखाएं।",
-                    contact: "• किसान कॉल सेंटर टोल-फ्री नंबर: 1800-180-1551 पर कॉल करें।",
-                    future: "• संतुलित पोषण दें और खेत की स्वच्छता बनाए रखें।"
+                    treatment: "निरीक्षण कर उपयुक्त कीटनाशक।",
+                    prevention: "नियमित दौरा और सलाह।",
+                    action: "• विशेषज्ञ को दिखाएं।",
+                    contact: "• 1800-180-1551",
+                    future: "• संतुलित पोषण।"
                 }
             },
             en: {
                 "Healthy Leaf": {
-                    treatment: "Crop is perfectly healthy! No medicine required.",
-                    prevention: "• Maintain optimum soil moisture.\n• Use balanced fertilizers (NPK).",
-                    action: "• No chemical spray is required.\n• Inspect field every 3-4 days.",
-                    contact: "• Contact Kisan Call Center (1800-180-1551) for regular guidance.",
-                    future: "• Use organic compost to improve soil health."
+                    treatment: "Crop is perfectly healthy!",
+                    prevention: "• Timely irrigation.\n• Balanced NPK.",
+                    action: "• No spray needed.\n• Inspect every 3-4 days.",
+                    contact: "• Kisan Call Center: 1800-180-1551",
+                    future: "• Use organic compost."
                 },
                 "Tikka Disease": {
-                    treatment: "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) mixed in 10 liters of water.",
-                    prevention: "• Perform seed treatment before sowing.\n• Practice crop rotation.",
-                    action: "• Remove infected leaves and destroy them away from the field.\n• Spray during early morning or late evening.",
-                    contact: "• Contact nearby Agriculture Service Center or Kisan Call Center: 1800-180-1551.",
-                    future: "• Treat seeds with Trichoderma (4g/kg) before sowing next season."
+                    treatment: "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) in 10L water.",
+                    prevention: "• Seed treatment.\n• Crop rotation.",
+                    action: "• Remove infected leaves.",
+                    contact: "• Agri Center.\n• 1800-180-1551",
+                    future: "• Trichoderma treatment."
                 },
                 "Rust Disease": {
-                    treatment: "Spray Tebuconazole or Hexaconazole to control Rust disease.",
-                    prevention: "• Sow disease-resistant varieties.\n• Maintain proper spacing between plants.",
-                    action: "• Immediately stop excess usage of Urea (Nitrogen) fertilizer.",
-                    contact: "• Contact local Agricultural Extension Officer.",
-                    future: "• Choose disease-resistant crop varieties in the future."
+                    treatment: "Spray Tebuconazole or Hexaconazole.",
+                    prevention: "• Resistant varieties.",
+                    action: "• Reduce urea.",
+                    contact: "• Agri Officer.",
+                    future: "• Choose resistant varieties."
                 },
                 "Alternaria Blight": {
-                    treatment: "Spray Copper Oxychloride 50% WP (30g) mixed in 15 liters of water.",
-                    prevention: "• Avoid excessive use of Nitrogen fertilizers.",
-                    action: "• Remove affected leaves from the field.",
-                    contact: "• Contact Kisan Call Center: 1800-180-1551.",
-                    future: "• Use certified seeds only."
+                    treatment: "Copper Oxychloride 50% WP (30g) in 15L.",
+                    prevention: "• Avoid excess Nitrogen.",
+                    action: "• Remove affected leaves.",
+                    contact: "• 1800-180-1551",
+                    future: "• Use certified seeds."
                 },
                 "Default": {
-                    treatment: "Inspect crop and spray suitable pesticide.",
-                    prevention: "Visit field regularly and seek expert advice.",
-                    action: "• Show infected leaf samples to agriculture experts.",
-                    contact: "• Call Kisan Call Center Toll Free: 1800-180-1551.",
-                    future: "• Provide balanced nutrition and keep field clean."
+                    treatment: "Inspect and spray suitable pesticide.",
+                    prevention: "Regular visits and expert advice.",
+                    action: "• Show samples to experts.",
+                    contact: "• 1800-180-1551",
+                    future: "• Balanced nutrition."
                 }
             }
         };
 
+        /* ============ LANGUAGE ============ */
         function changeLanguage() {
             currentLang = document.getElementById("lang-select").value;
             const t = translations[currentLang];
@@ -698,10 +905,7 @@
             document.getElementById("txt-student2-badge").innerText = t.student2Badge;
             document.getElementById("txt-news-title").innerText = t.newsTitle;
             document.getElementById("txt-weather-title").innerText = t.weatherTitle;
-            document.getElementById("txt-weather-stats").innerHTML = t.weatherStats;
-            document.getElementById("weather-alert").innerText = t.weatherAlert;
             document.getElementById("txt-calc-title").innerText = t.calcTitle;
-            document.getElementById("txt-calc-desc").innerText = t.calcDesc;
             document.getElementById("txt-calc-btn").innerText = t.calcBtn;
             document.getElementById("vigha-input").placeholder = t.placeholder;
             document.getElementById("txt-btn-cam").innerText = t.btnCam;
@@ -709,6 +913,7 @@
             document.getElementById("txt-analysis-title").innerText = t.analysisTitle;
             document.getElementById("txt-voice-btn").innerText = t.voiceBtn;
             document.getElementById("txt-wa-btn").innerText = t.waBtn;
+            document.getElementById("txt-pdf-btn").innerText = t.pdfBtn;
             document.getElementById("txt-prevention-title").innerText = t.preventionTitle;
             document.getElementById("txt-more-btn").innerText = t.moreBtn;
             document.getElementById("modal-disease-title").innerText = t.modalTitle;
@@ -716,51 +921,24 @@
             document.getElementById("txt-modal-step2").innerText = t.modalStep2;
             document.getElementById("txt-modal-step3").innerText = t.modalStep3;
             document.getElementById("txt-footer").innerText = t.footer;
+            document.getElementById("txt-treatment-title").innerText = t.treatmentTitle;
 
-            if (currentTopClass !== "") {
-                updateOutputCards();
-            }
-
-            if(document.getElementById("vigha-input").value) {
-                calculateFertilizer();
-            }
+            if (currentTopClass !== "") updateOutputCards();
+            if (document.getElementById("vigha-input").value) calculateFertilizer();
         }
 
         function getDiseaseInfo(className) {
             const langData = diseaseDataMulti[currentLang] || diseaseDataMulti["gu"];
             let key = "Default";
             const nameLower = className.toLowerCase();
-            
             if (nameLower.includes("healthy")) key = "Healthy Leaf";
             else if (nameLower.includes("tikka")) key = "Tikka Disease";
             else if (nameLower.includes("rust")) key = "Rust Disease";
             else if (nameLower.includes("alternaria")) key = "Alternaria Blight";
-
             return langData[key] || langData["Default"];
         }
 
-        function calculateFertilizer() {
-            const vigha = parseFloat(document.getElementById("vigha-input").value);
-            const resDiv = document.getElementById("calc-result");
-            const t = translations[currentLang];
-
-            if (!vigha || vigha <= 0) {
-                resDiv.innerText = t.errInput;
-                return;
-            }
-
-            const urea = (vigha * 10).toFixed(1);
-            const dap = (vigha * 12.5).toFixed(1);
-
-            if (currentLang === "gu") {
-                resDiv.innerHTML = `🌱 જરૂરિયાત:<br>• યુરિયા ખાતર: ${urea} કિલો<br>• DAP ખાતર: ${dap} કિલો`;
-            } else if (currentLang === "hi") {
-                resDiv.innerHTML = `🌱 आवश्यकता:<br>• यूरिया उर्वरक: ${urea} किग्रा<br>• डीएपी उर्वरक: ${dap} किग्रा`;
-            } else {
-                resDiv.innerHTML = `🌱 Requirement:<br>• Urea Fertilizer: ${urea} kg<br>• DAP Fertilizer: ${dap} kg`;
-            }
-        }
-
+        /* ============ AI MODEL ============ */
         async function initModel() {
             if (!model) {
                 try {
@@ -769,7 +947,7 @@
                     model = await tmImage.load(modelURL, metadataURL);
                     maxPredictions = model.getTotalClasses();
                 } catch(e) {
-                    document.getElementById("error-log").innerHTML = "⚠️ મોડેલ લોડ થવામાં ભૂલ આવી. ચકાસો કે 'my_model' ફોલ્ડર અને ફાઈલો હાજર છે.";
+                    document.getElementById("error-log").innerHTML = "⚠️ મોડેલ લોડ થઈ શક્યું નહીં. 'my_model' ફોલ્ડર ચકાસો.";
                     throw e;
                 }
             }
@@ -779,27 +957,18 @@
             const errorDiv = document.getElementById("error-log");
             document.getElementById("preview-img").style.display = "none";
             errorDiv.innerHTML = "";
-
             try {
                 await initModel();
-
                 const stream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: { exact: "environment" } }
-                }).catch(async () => {
-                    return await navigator.mediaDevices.getUserMedia({ video: true });
-                });
-
+                }).catch(async () => await navigator.mediaDevices.getUserMedia({ video: true }));
                 videoElement.srcObject = stream;
                 videoElement.style.display = "block";
                 isCameraActive = true;
-
                 setupUI();
-                videoElement.onloadedmetadata = () => {
-                    predictLoop();
-                };
+                videoElement.onloadedmetadata = () => { predictLoop(); };
             } catch (err) {
-                console.error(err);
-                errorDiv.innerHTML = "કૅમેરા શરુ ન થઈ શક્યો. લિંક HTTPS વાળી છે કે નહીં ચકાસો.";
+                errorDiv.innerHTML = "કૅમેરા શરુ ન થઈ શક્યો. HTTPS લિંક ચકાસો.";
             }
         }
 
@@ -814,23 +983,30 @@
             const file = event.target.files[0];
             const errorDiv = document.getElementById("error-log");
             errorDiv.innerHTML = "";
-
             if (!file) return;
 
             isCameraActive = false;
             if (videoElement.srcObject) {
-                const tracks = videoElement.srcObject.getTracks();
-                tracks.forEach(track => track.stop());
+                videoElement.srcObject.getTracks().forEach(t => t.stop());
                 videoElement.srcObject = null;
             }
             videoElement.style.display = "none";
 
             const imgElement = document.getElementById("preview-img");
-
             const reader = new FileReader();
             reader.onload = async function(e) {
                 imgElement.src = e.target.result;
                 imgElement.style.display = "block";
+                
+                // LOADING ANIMATION
+                document.getElementById("results-title").style.display = "block";
+                labelContainer = document.getElementById("label-container");
+                labelContainer.innerHTML = `
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                        <p style="color:#2e7d32; font-weight:bold;">🔍 AI વિશ્લેષણ કરી રહ્યું છે...</p>
+                    </div>
+                `;
 
                 imgElement.onload = async function() {
                     try {
@@ -838,13 +1014,11 @@
                         setupUI();
                         await predict(imgElement);
                     } catch(err) {
-                        console.error(err);
-                        errorDiv.innerHTML = "ઈમેજ એનાલિસિસમાં ભૂલ આવી: " + err.message;
+                        errorDiv.innerHTML = "ઈમેજ એનાલિસિસમાં ભૂલ: " + err.message;
                     }
                 };
             };
             reader.readAsDataURL(file);
-
             event.target.value = '';
         }
 
@@ -852,7 +1026,6 @@
             document.getElementById("results-title").style.display = "block";
             labelContainer = document.getElementById("label-container");
             labelContainer.innerHTML = "";
-            
             for (let i = 0; i < maxPredictions; i++) {
                 const badge = document.createElement("div");
                 badge.className = "prediction-badge";
@@ -871,31 +1044,24 @@
 
         async function predict(imageSource) {
             if (!model) return;
-
             const prediction = await model.predict(imageSource);
-            let topClass = "";
-            let highestProb = 0;
-
+            let topClass = "", highestProb = 0;
             for (let i = 0; i < maxPredictions; i++) {
                 const className = prediction[i].className;
                 const prob = prediction[i].probability;
                 const percentage = (prob * 100).toFixed(0) + "%";
-                
                 const badge = labelContainer.childNodes[i];
                 if (badge) {
                     badge.querySelector(".class-name").innerText = className;
                     badge.querySelector(".class-pct").innerText = percentage;
                     badge.querySelector(".progress-bar-fill").style.width = percentage;
                 }
-
-                if (prob > highestProb) {
-                    highestProb = prob;
-                    topClass = className;
-                }
+                if (prob > highestProb) { highestProb = prob; topClass = className; }
             }
-
             currentTopClass = topClass;
+            currentConfidence = (highestProb * 100).toFixed(0);
             updateOutputCards();
+            saveToHistory(topClass, currentConfidence);
         }
 
         function updateOutputCards() {
@@ -903,119 +1069,230 @@
             const preventionCard = document.getElementById("prevention-card");
             const voiceBtn = document.getElementById("voice-btn");
             const whatsappBtn = document.getElementById("whatsapp-btn");
+            const pdfBtn = document.getElementById("pdf-btn");
             const moreBtn = document.getElementById("more-info-btn");
             const t = translations[currentLang];
-
             const data = getDiseaseInfo(currentTopClass);
+
+            // ACCURACY WARNING
+            let accuracyNote = "";
+            if (currentConfidence < 60) {
+                accuracyNote = `<div style="background:#fff3e0; padding:8px; border-radius:6px; margin-bottom:8px; color:#e65100; font-size:0.85rem;">⚠️ AI ને ફક્ત ${currentConfidence}% ખાતરી છે. નિષ્ણાતની સલાહ લેવી સારી.</div>`;
+            } else if (currentConfidence >= 90) {
+                accuracyNote = `<div style="background:#e8f5e9; padding:6px; border-radius:6px; margin-bottom:8px; color:#2e7d32; font-size:0.82rem;">✅ ચોકસાઈ: ${currentConfidence}%</div>`;
+            }
 
             if (currentTopClass.toLowerCase().includes("healthy")) {
                 treatmentCard.style.display = "block";
-                treatmentCard.style.backgroundColor = "#e8f5e9";
-                treatmentCard.style.border = "1px solid #a5d6a7";
-                
                 treatmentCard.querySelector(".info-title").innerText = t.healthyStatus;
-                document.getElementById("treatment-text").innerText = data.treatment;
+                document.getElementById("treatment-text").innerHTML = accuracyNote + data.treatment;
             } else {
                 treatmentCard.style.display = "block";
-                treatmentCard.style.backgroundColor = "#fff3e0";
-                treatmentCard.style.border = "1px solid #ffe0b2";
-                
                 treatmentCard.querySelector(".info-title").innerText = t.treatmentTitle;
-                document.getElementById("treatment-text").innerText = data.treatment;
+                document.getElementById("treatment-text").innerHTML = accuracyNote + data.treatment;
             }
 
             preventionCard.style.display = "block";
+            document.getElementById("prevention-text").innerText = data.prevention;
             voiceBtn.style.display = "block";
             whatsappBtn.style.display = "block";
+            pdfBtn.style.display = "block";
             moreBtn.style.display = "block";
-
-            document.getElementById("prevention-text").innerText = data.prevention;
         }
 
+        /* ============ VOICE OUTPUT ============ */
         function speakAnalysis() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-
                 const data = getDiseaseInfo(currentTopClass);
                 let textToSpeak = "";
-
                 if (currentTopClass.toLowerCase().includes("healthy")) {
                     textToSpeak = data.treatment + " " + data.prevention;
-                } else {
-                    if (currentLang === "hi") {
-                        textToSpeak = "आपकी फसल में " + currentTopClass + " के लक्षण मिले हैं। इलाज: " + data.treatment + "। बचाव के उपाय: " + data.prevention;
-                    } else if (currentLang === "en") {
-                        textToSpeak = "Detected " + currentTopClass + " on crop. Remedy: " + data.treatment + ". Prevention: " + data.prevention;
-                    } else {
-                        textToSpeak = "તમારા પાકમાં " + currentTopClass + " રોગના લક્ષણો જણાયા છે. ઈલાજ: " + data.treatment + ". આગોતરા ઉપાયો: " + data.prevention;
-                    }
-                }
-
-                textToSpeak = textToSpeak.replace(/•/g, "").replace(/\n/g, " ");
-
-                const utterance = new SpeechSynthesisUtterance(textToSpeak);
-                
-                if (currentLang === "gu") {
-                    utterance.lang = 'gu-IN';
                 } else if (currentLang === "hi") {
-                    utterance.lang = 'hi-IN';
+                    textToSpeak = `आपकी फसल में ${currentTopClass} के लक्षण मिले हैं। इलाज: ${data.treatment}. बचाव: ${data.prevention}`;
+                } else if (currentLang === "en") {
+                    textToSpeak = `Detected ${currentTopClass}. Remedy: ${data.treatment}. Prevention: ${data.prevention}`;
                 } else {
-                    utterance.lang = 'en-US';
+                    textToSpeak = `તમારા પાકમાં ${currentTopClass} રોગના લક્ષણો જણાયા છે. ઈલાજ: ${data.treatment}. આગોતરા ઉપાયો: ${data.prevention}`;
                 }
-
+                textToSpeak = textToSpeak.replace(/•/g, "").replace(/\n/g, " ");
+                const utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.lang = currentLang === "gu" ? "gu-IN" : (currentLang === "hi" ? "hi-IN" : "en-US");
                 utterance.rate = 0.9;
                 window.speechSynthesis.speak(utterance);
             } else {
-                alert("તમારું બ્રાઉઝર અવાજ માર્ગદર્શન સપોર્ટ કરતું નથી.");
+                alert("બ્રાઉઝર અવાજ સપોર્ટ કરતું નથી.");
             }
         }
 
-        function shareOnWhatsApp() {
+        /* ============ WHATSAPP ============ */
+        async function shareOnWhatsApp() {
             const data = getDiseaseInfo(currentTopClass);
-            let msg = "";
+            const previewImg = document.getElementById("preview-img");
 
-            if (currentLang === "hi") {
-                msg = `🌱 *AI किसान मित्र - फसल रोग रिपोर्ट*\n\n`;
-                msg += `📌 *रोग:* ${currentTopClass}\n`;
-                msg += `💊 *इलाज:* ${data.treatment}\n`;
-                msg += `🛡️ *बचाव:* ${data.prevention}\n\n`;
-                msg += `🏫 *आंतरोल प्राथमिक विद्यालय*`;
-            } else if (currentLang === "en") {
-                msg = `🌱 *AI Farmer Friend - Crop Disease Report*\n\n`;
-                msg += `📌 *Disease:* ${currentTopClass}\n`;
-                msg += `💊 *Remedy:* ${data.treatment}\n`;
-                msg += `🛡 *Prevention:* ${data.prevention}\n\n`;
-                msg += `🏫 *Antrol Primary School*`;
-            } else {
-                msg = `🌱 *AI ખેડૂત મિત્ર - રોગ નિદાન રિપોર્ટ*\n\n`;
-                msg += `📌 *રોગનું નામ:* ${currentTopClass}\n`;
-                msg += `💊 *દવાની સલાહ:* ${data.treatment}\n`;
-                msg += `🛡️ *આગોતરા ઉપાયો:* ${data.prevention}\n\n`;
-                msg += `🏫 *આંતરોલ પ્રાથમિક શાળા - ગણિત વિજ્ઞાન પ્રદર્શન*`;
+            let msg = `🌱 *AI ખેડૂત મિત્ર - રોગ રિપોર્ટ*\n\n`;
+            msg += `📌 *રોગ:* ${currentTopClass}\n`;
+            msg += `🎯 *ચોકસાઈ:* ${currentConfidence}%\n`;
+            msg += `💊 *ઈલાજ:* ${data.treatment}\n`;
+            msg += `🛡️ *બચાવ:* ${data.prevention}\n\n`;
+            msg += `🏫 *આંતરોલ પ્રાથમિક શાળા*`;
+
+            // Web Share API with photo (mobile only)
+            if (navigator.share && previewImg.src && previewImg.style.display !== "none") {
+                try {
+                    const response = await fetch(previewImg.src);
+                    const blob = await response.blob();
+                    const file = new File([blob], 'crop.jpg', { type: 'image/jpeg' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: 'ખેડૂત મિત્ર રિપોર્ટ',
+                            text: msg
+                        });
+                        return;
+                    }
+                } catch(e) { /* fallback */ }
             }
-
-            const encodedMsg = encodeURIComponent(msg);
-            window.open(`https://api.whatsapp.com/send?text=${encodedMsg}`, '_blank');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
+        /* ============ PDF REPORT ============ */
+        function downloadPDF() {
+            if (!currentTopClass) { showToast("પહેલા સ્કેન કરો"); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const data = getDiseaseInfo(currentTopClass);
+
+            doc.setFillColor(27, 94, 32);
+            doc.rect(0, 0, 210, 30, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.text("AI Khedut Mitra - Crop Report", 105, 15, { align: 'center' });
+            doc.setFontSize(10);
+            doc.text("Antrol Primary School, Tharad", 105, 23, { align: 'center' });
+
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            let y = 45;
+
+            doc.setFont(undefined, 'bold');
+            doc.text("Disease: " + currentTopClass, 15, y); y += 8;
+            doc.setFont(undefined, 'normal');
+            doc.text("Accuracy: " + currentConfidence + "%", 15, y); y += 8;
+            doc.text("Date: " + new Date().toLocaleString(), 15, y); y += 12;
+
+            doc.setFont(undefined, 'bold');
+            doc.text("Treatment:", 15, y); y += 7;
+            doc.setFont(undefined, 'normal');
+            const treatLines = doc.splitTextToSize(data.treatment.replace(/•/g, '-'), 180);
+            doc.text(treatLines, 15, y); y += treatLines.length * 6 + 6;
+
+            doc.setFont(undefined, 'bold');
+            doc.text("Prevention:", 15, y); y += 7;
+            doc.setFont(undefined, 'normal');
+            const prevLines = doc.splitTextToSize(data.prevention.replace(/•/g, '-'), 180);
+            doc.text(prevLines, 15, y); y += prevLines.length * 6 + 6;
+
+            doc.setFont(undefined, 'bold');
+            doc.text("Contact: Kisan Call Center - 1800-180-1551", 15, y); y += 10;
+
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text("Generated by AI Khedut Mitra App", 105, 285, { align: 'center' });
+
+            doc.save(`crop-report-${Date.now()}.pdf`);
+            showToast("📄 PDF ડાઉનલોડ થયો!");
+        }
+
+        /* ============ HISTORY ============ */
+        function saveToHistory(disease, confidence) {
+            if (!disease) return;
+            try {
+                let history = JSON.parse(localStorage.getItem('scanHistory') || '[]');
+                const previewImg = document.getElementById("preview-img");
+                const imgData = previewImg.src && previewImg.style.display !== "none" ? previewImg.src.substring(0, 50000) : "";
+                history.unshift({
+                    disease, confidence,
+                    date: new Date().toLocaleString('gu-IN'),
+                    image: imgData
+                });
+                localStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)));
+            } catch(e) { /* storage full */ }
+        }
+
+        function renderHistory() {
+            const list = document.getElementById("history-list");
+            let history = [];
+            try { history = JSON.parse(localStorage.getItem('scanHistory') || '[]'); } catch(e) {}
+            if (history.length === 0) {
+                list.innerHTML = `<p style="text-align:center; color:#888; padding:20px;">📭 હજી કોઈ સ્કેન કર્યું નથી.</p>`;
+                return;
+            }
+            list.innerHTML = history.map(h => `
+                <div class="history-item">
+                    ${h.image ? `<img src="${h.image}" alt="leaf">` : `<div style="width:60px; height:60px; background:#e8f5e9; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">🌿</div>`}
+                    <div class="history-info">
+                        <div class="history-disease">${h.disease}</div>
+                        <div style="font-size:0.78rem; color:#2e7d32;">🎯 ${h.confidence}% ચોકસાઈ</div>
+                        <div class="history-date">${h.date}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            if (confirm("શું ખરેખર ઇતિહાસ સાફ કરવો છે?")) {
+                localStorage.removeItem('scanHistory');
+                renderHistory();
+                showToast("🗑️ ઇતિહાસ સાફ થયો");
+            }
+        }
+
+        /* ============ FAQ ============ */
+        function toggleFaq(el) { el.classList.toggle('open'); }
+
+        /* ============ MODAL ============ */
         function openModal() {
             const data = getDiseaseInfo(currentTopClass);
             const t = translations[currentLang];
-
-            document.getElementById("modal-disease-title").innerText = "📖 " + (currentTopClass || "Disease") + " - " + t.moreBtn;
+            document.getElementById("modal-disease-title").innerText = "📖 " + (currentTopClass || "Disease");
             document.getElementById("modal-action-text").innerText = data.action || data.prevention;
-            document.getElementById("modal-contact-text").innerText = data.contact || "• Call Kisan Call Center: 1800-180-1551";
+            document.getElementById("modal-contact-text").innerText = data.contact || "• Kisan Call Center: 1800-180-1551";
             document.getElementById("modal-future-text").innerText = data.future || data.prevention;
-
             document.getElementById("info-modal").style.display = "flex";
         }
+        function closeModal() { document.getElementById("info-modal").style.display = "none"; }
 
-        function closeModal() {
-            document.getElementById("info-modal").style.display = "none";
+        /* ============ PWA ============ */
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById("install-btn").style.display = "block";
+        });
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((c) => {
+                    if (c.outcome === 'accepted') showToast("✅ એપ ઇન્સ્ટોલ થઈ!");
+                    deferredPrompt = null;
+                    document.getElementById("install-btn").style.display = "none";
+                });
+            }
+        }
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(() => {});
         }
 
+        /* ============ INIT ============ */
         window.onload = function() {
             showMarketRates();
+            // Set today's APMC update time
+            const el = document.getElementById("apmc-update-time");
+            if (el) {
+                const d = new Date();
+                el.innerText = d.toLocaleDateString('gu-IN') + " " + d.toLocaleTimeString('gu-IN', {hour:'2-digit', minute:'2-digit'});
+            }
         };
     </script>
 </body>
