@@ -1155,37 +1155,38 @@
             }
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
-
-        /* ============ PDF REPORT (English) ============ */
+/* ============ PDF REPORT (English) - FIXED ============ */
 function downloadPDF() {
     if (!currentTopClass) { showToast("પહેલા સ્કેન કરો"); return; }
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     
-    const diseaseMap = {
-        "Tikka Disease": "Tikka (Leaf Spot) Disease",
-        "Rust Disease": "Rust Disease",
-        "Alternaria Blight": "Alternaria Blight",
-        "Healthy Leaf": "Healthy Leaf"
-    };
-    const diseaseEn = diseaseMap[currentTopClass] || currentTopClass;
+    // ⭐ નાના-મોટા અક્ષરો ignore કરો
+    const cls = (currentTopClass || "").toLowerCase();
     
-    const treatmentMap = {
-        "Tikka Disease": "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) in 10 liters water. Spray in early morning or late evening.",
-        "Rust Disease": "Spray Tebuconazole or Hexaconazole fungicide on affected crop. Repeat after 15 days if needed.",
-        "Alternaria Blight": "Spray Copper Oxychloride 50% WP (30g) in 15 liters water. Remove affected leaves.",
-        "Healthy Leaf": "Crop is healthy. No treatment needed. Continue regular monitoring."
-    };
-    const treatmentEn = treatmentMap[currentTopClass] || "Inspect crop and use suitable pesticide as per expert advice.";
+    let diseaseEn = "Unknown Disease";
+    let treatmentEn = "Inspect crop and use suitable pesticide as per expert advice.";
+    let preventionEn = "- Regular field visits\n- Consult agriculture expert\n- Use certified seeds";
     
-    const preventionMap = {
-        "Tikka Disease": "- Seed treatment before sowing with Trichoderma\n- Practice crop rotation\n- Remove infected leaves from field\n- Maintain proper plant spacing",
-        "Rust Disease": "- Use resistant varieties\n- Maintain proper plant spacing\n- Reduce excess Urea (Nitrogen) usage\n- Regular field monitoring",
-        "Alternaria Blight": "- Avoid excess Nitrogen fertilizer\n- Remove affected leaves from field\n- Use certified seeds only\n- Ensure proper drainage",
-        "Healthy Leaf": "- Timely irrigation\n- Balanced NPK fertilizer\n- Regular field monitoring\n- Organic compost for soil health"
-    };
-    const preventionEn = preventionMap[currentTopClass] || "- Regular field visits\n- Consult agriculture expert\n- Use certified seeds";
+    if (cls.includes("healthy")) {
+        diseaseEn = "Healthy Leaf";
+        treatmentEn = "Crop is healthy. No treatment needed. Continue regular monitoring.";
+        preventionEn = "- Timely irrigation\n- Balanced NPK fertilizer\n- Regular field monitoring\n- Organic compost for soil health";
+    } else if (cls.includes("tikka")) {
+        diseaseEn = "Tikka (Leaf Spot) Disease";
+        treatmentEn = "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) in 10 liters water. Spray in early morning or late evening.";
+        preventionEn = "- Seed treatment before sowing with Trichoderma\n- Practice crop rotation\n- Remove infected leaves from field\n- Maintain proper plant spacing";
+    } else if (cls.includes("rust")) {
+        diseaseEn = "Rust Disease";
+        treatmentEn = "Spray Tebuconazole or Hexaconazole fungicide on affected crop. Repeat after 15 days if needed.";
+        preventionEn = "- Use resistant varieties\n- Maintain proper plant spacing\n- Reduce excess Urea (Nitrogen) usage\n- Regular field monitoring";
+    } else if (cls.includes("alternaria")) {
+        diseaseEn = "Alternaria Blight";
+        treatmentEn = "Spray Copper Oxychloride 50% WP (30g) in 15 liters water. Remove affected leaves.";
+        preventionEn = "- Avoid excess Nitrogen fertilizer\n- Remove affected leaves from field\n- Use certified seeds only\n- Ensure proper drainage";
+    }
     
+    // ===== HEADER =====
     doc.setFillColor(27, 94, 32);
     doc.rect(0, 0, 210, 32, 'F');
     doc.setTextColor(255, 255, 255);
@@ -1199,6 +1200,7 @@ function downloadPDF() {
     doc.setTextColor(0, 0, 0);
     let y = 48;
 
+    // ===== DISEASE INFO =====
     doc.setFontSize(14);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(200, 40, 40);
@@ -1213,6 +1215,7 @@ function downloadPDF() {
     doc.text("Date: " + new Date().toLocaleString('en-IN'), 15, y); 
     y += 14;
 
+    // ===== TREATMENT =====
     doc.setFontSize(13);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(27, 94, 32);
@@ -1226,6 +1229,7 @@ function downloadPDF() {
     doc.text(treatLines, 15, y); 
     y += treatLines.length * 6 + 10;
 
+    // ===== PREVENTION =====
     doc.setFontSize(13);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(0, 105, 92);
@@ -1239,14 +1243,15 @@ function downloadPDF() {
     doc.text(prevLines, 15, y); 
     y += prevLines.length * 6 + 12;
 
+    // ===== CONTACT BOX =====
     doc.setFillColor(232, 245, 233);
     doc.rect(10, y, 190, 22, 'F');
     doc.setFontSize(12);
     doc.setFont(undefined, 'bold');
     doc.setTextColor(27, 94, 32);
     doc.text("Kisan Call Center: 1800-180-1551 (Toll Free)", 15, y + 14);
-    y += 30;
 
+    // ===== FOOTER =====
     doc.setFontSize(9);
     doc.setTextColor(120, 120, 120);
     doc.setFont(undefined, 'normal');
@@ -1256,6 +1261,7 @@ function downloadPDF() {
     doc.save(crop-report-${Date.now()}.pdf);
     showToast("📄 PDF ડાઉનલોડ થયો!");
 }
+       
         /* ============ HISTORY ============ */
         function saveToHistory(disease, confidence) {
             if (!disease) return;
