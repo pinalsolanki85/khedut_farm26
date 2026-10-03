@@ -1158,52 +1158,102 @@
 
         /* ============ PDF REPORT ============ */
         function downloadPDF() {
-            if (!currentTopClass) { showToast("પહેલા સ્કેન કરો"); return; }
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            const data = getDiseaseInfo(currentTopClass);
+    if (!currentTopClass) { showToast("પહેલા સ્કેન કરો"); return; }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // English disease name મેપિંગ
+    const diseaseMap = {
+        "Tikka Disease": "Tikka (Leaf Spot) Disease",
+        "Rust Disease": "Rust Disease",
+        "Alternaria Blight": "Alternaria Blight",
+        "Healthy Leaf": "Healthy Leaf"
+    };
+    const diseaseEn = diseaseMap[currentTopClass] || currentTopClass;
+    
+    // English treatment મેપિંગ
+    const treatmentMap = {
+        "Tikka Disease": "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) in 10 liters water. Spray in morning or evening.",
+        "Rust Disease": "Spray Tebuconazole or Hexaconazole fungicide on affected crop. Repeat after 15 days if needed.",
+        "Alternaria Blight": "Spray Copper Oxychloride 50% WP (30g) in 15 liters water.",
+        "Healthy Leaf": "Crop is healthy. No treatment needed."
+    };
+    const treatmentEn = treatmentMap[currentTopClass] || "Inspect crop and use suitable pesticide.";
+    
+    // English prevention
+    const preventionMap = {
+        "Tikka Disease": "- Seed treatment before sowing\n- Practice crop rotation\n- Remove infected leaves\n- Use Trichoderma treatment",
+        "Rust Disease": "- Use resistant varieties\n- Maintain proper plant spacing\n- Reduce excess Urea usage",
+        "Alternaria Blight": "- Avoid excess Nitrogen fertilizer\n- Remove affected leaves\n- Use certified seeds",
+        "Healthy Leaf": "- Timely irrigation\n- Balanced NPK fertilizer\n- Regular field monitoring"
+    };
+    const preventionEn = preventionMap[currentTopClass] || "- Regular field visits\n- Expert consultation";
+    
+    // PDF Header
+    doc.setFillColor(27, 94, 32);
+    doc.rect(0, 0, 210, 30, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont(undefined, 'bold');
+    doc.text("AI Khedut Mitra - Crop Report", 105, 15, { align: 'center' });
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text("Antrol Primary School, Tharad, Gujarat", 105, 24, { align: 'center' });
 
-            doc.setFillColor(27, 94, 32);
-            doc.rect(0, 0, 210, 30, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFontSize(16);
-            doc.text("AI Khedut Mitra - Crop Report", 105, 15, { align: 'center' });
-            doc.setFontSize(10);
-            doc.text("Antrol Primary School, Tharad", 105, 23, { align: 'center' });
+    doc.setTextColor(0, 0, 0);
+    let y = 45;
 
-            doc.setTextColor(0, 0, 0);
-            doc.setFontSize(12);
-            let y = 45;
+    // Disease Info
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text("Disease Detected: " + diseaseEn, 15, y); y += 10;
+    
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'normal');
+    doc.text("AI Accuracy: " + currentConfidence + "%", 15, y); y += 7;
+    doc.text("Date: " + new Date().toLocaleString('en-IN'), 15, y); y += 12;
 
-            doc.setFont(undefined, 'bold');
-            doc.text("Disease: " + currentTopClass, 15, y); y += 8;
-            doc.setFont(undefined, 'normal');
-            doc.text("Accuracy: " + currentConfidence + "%", 15, y); y += 8;
-            doc.text("Date: " + new Date().toLocaleString(), 15, y); y += 12;
+    // Treatment
+    doc.setFontSize(13);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(27, 94, 32);
+    doc.text("Treatment / Remedy:", 15, y); y += 8;
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(0, 0, 0);
+    const treatLines = doc.splitTextToSize(treatmentEn, 180);
+    doc.text(treatLines, 15, y); y += treatLines.length * 6 + 8;
 
-            doc.setFont(undefined, 'bold');
-            doc.text("Treatment:", 15, y); y += 7;
-            doc.setFont(undefined, 'normal');
-            const treatLines = doc.splitTextToSize(data.treatment.replace(/•/g, '-'), 180);
-            doc.text(treatLines, 15, y); y += treatLines.length * 6 + 6;
+    // Prevention
+    doc.setFontSize(13);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(0, 105, 92);
+    doc.text("Future Prevention:", 15, y); y += 8;
+    doc.setFontSize(11);
+    doc.setFont(undefined, 'normal');
+    doc.setTextColor(0, 0, 0);
+    const prevLines = doc.splitTextToSize(preventionEn, 180);
+    doc.text(prevLines, 15, y); y += prevLines.length * 6 + 10;
 
-            doc.setFont(undefined, 'bold');
-            doc.text("Prevention:", 15, y); y += 7;
-            doc.setFont(undefined, 'normal');
-            const prevLines = doc.splitTextToSize(data.prevention.replace(/•/g, '-'), 180);
-            doc.text(prevLines, 15, y); y += prevLines.length * 6 + 6;
+    // Contact
+    doc.setFillColor(232, 245, 233);
+    doc.rect(10, y, 190, 20, 'F');
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'bold');
+    doc.setTextColor(27, 94, 32);
+    doc.text("Kisan Call Center: 1800-180-1551 (Toll Free)", 15, y + 12);
+    y += 28;
 
-            doc.setFont(undefined, 'bold');
-            doc.text("Contact: Kisan Call Center - 1800-180-1551", 15, y); y += 10;
+    // Footer
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.setFont(undefined, 'normal');
+    doc.text("Generated by AI Khedut Mitra App", 105, 285, { align: 'center' });
+    doc.text("Antrol Primary School - Tharad, Gujarat", 105, 290, { align: 'center' });
 
-            doc.setFontSize(9);
-            doc.setTextColor(100, 100, 100);
-            doc.text("Generated by AI Khedut Mitra App", 105, 285, { align: 'center' });
-
-            doc.save(`crop-report-${Date.now()}.pdf`);
-            showToast("📄 PDF ડાઉનલોડ થયો!");
-        }
-
+    doc.save(crop-report-${Date.now()}.pdf);
+    showToast("📄 PDF ડાઉનલોડ થયો!");
+}
         /* ============ HISTORY ============ */
         function saveToHistory(disease, confidence) {
             if (!disease) return;
