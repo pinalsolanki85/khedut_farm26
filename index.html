@@ -24,6 +24,10 @@
         body.dark-mode .calc-input, body.dark-mode .dropdown-select { background: #333; color: white; border-color: #555; }
         body.dark-mode .menu-btn { background: #1e1e1e; color: #a5d6a7; border-color: #2e7d32; }
         body.dark-mode .menu-btn.active { background: #2e7d32; color: white; }
+        body.dark-mode .scheme-item { background: #263238; border-left-color: #827717; color: #e0e0e0; }
+        body.dark-mode .modal-section { background: #263238; color: #e0e0e0; }
+        body.dark-mode .modal-section-title { color: #a5d6a7; }
+        body.dark-mode .modal-text { color: #cfd8dc; }
         
         .header-card { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; width: 100%; max-width: 500px; padding: 18px; border-radius: 16px; text-align: center; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); margin-bottom: 12px; }
         .school-name { font-size: 1.2rem; font-weight: bold; margin-bottom: 4px; }
@@ -55,7 +59,7 @@
         .feature-card { background: #ffffff; border-radius: 14px; width: 100%; max-width: 500px; padding: 15px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; text-align: left; }
         .feature-title { font-weight: bold; color: #1b5e20; margin-bottom: 8px; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
 
-        .news-badge { background-color: #e3f2fd; border-left: 4px solid #1976d2; padding: 8px; margin-top: 6px; border-radius: 4px; font-size: 0.85rem; color: #0d47a1; }
+        .news-badge { background-color: #e3f2fd; border-left: 4px solid #1976d2; padding: 8px; margin-top: 6px; border-radius: 4px; font-size: 0.85rem; color: #0d47a1; line-height: 1.5; }
 
         .calc-input-group { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
         .calc-input, .dropdown-select { flex: 1; min-width: 120px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.92rem; }
@@ -99,8 +103,9 @@
         .rate-table th, .rate-table td { border: 1px solid #c8e6c9; padding: 8px; text-align: left; }
         .rate-table th { background-color: #e8f5e9; color: #1b5e20; }
 
-        .scheme-item { background: #f9fbe7; border-left: 4px solid #827717; padding: 10px; margin-top: 8px; border-radius: 6px; }
-        .scheme-title { font-weight: bold; color: #33691e; }
+        .scheme-item { background: #f9fbe7; border-left: 4px solid #827717; padding: 10px; margin-top: 8px; border-radius: 6px; transition: 0.2s; }
+        .scheme-item:hover { background: #f0f4c3; transform: translateX(3px); }
+        .scheme-title { font-weight: bold; color: #33691e; font-size: 0.92rem; }
         .scheme-desc { font-size: 0.85rem; color: #424242; margin-top: 3px; }
 
         .crop-season { background: #f1f8e9; border-radius: 8px; padding: 10px; margin-top: 8px; border: 1px solid #c8e6c9; }
@@ -108,11 +113,11 @@
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
         .modal-card { background: #ffffff; border-radius: 16px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 20px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); text-align: left; }
-        .modal-header { font-size: 1.2rem; font-weight: bold; color: #1b5e20; border-bottom: 2px solid #a5d6a7; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header { font-size: 1.1rem; font-weight: bold; color: #1b5e20; border-bottom: 2px solid #a5d6a7; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
         .close-btn { background: #d32f2f; color: white; border: none; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; cursor: pointer; }
         .modal-section { margin-bottom: 12px; background: #f9fbe7; padding: 10px; border-radius: 8px; border-left: 4px solid #827717; }
         .modal-section-title { font-weight: bold; color: #33691e; font-size: 0.95rem; margin-bottom: 4px; }
-        .modal-text { font-size: 0.88rem; color: #263238; line-height: 1.5; white-space: pre-line; }
+        .modal-text { font-size: 0.88rem; color: #263238; line-height: 1.6; }
 
         #error-log { color: #d32f2f; margin-top: 10px; font-weight: bold; font-size: 0.9rem; word-break: break-all; }
         .footer { margin-top: 15px; font-size: 0.85rem; color: #666; text-align: center; padding: 10px; }
@@ -127,7 +132,7 @@
         /* FAQ */
         .faq-item { background: #f9fbe7; border-radius: 8px; margin-top: 8px; padding: 10px; cursor: pointer; }
         .faq-q { font-weight: bold; color: #33691e; font-size: 0.9rem; }
-        .faq-a { font-size: 0.85rem; color: #555; margin-top: 6px; display: none; }
+        .faq-a { font-size: 0.85rem; color: #555; margin-top: 6px; display: none; line-height: 1.5; }
         .faq-item.open .faq-a { display: block; }
 
         /* Toast */
@@ -135,11 +140,14 @@
 
         /* Install PWA button */
         .install-btn { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #2e7d32, #1b5e20); color: white; border: none; padding: 12px 16px; border-radius: 50px; font-weight: bold; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,0.3); z-index: 999; display: none; }
+
+        /* News update time */
+        .news-update-time { font-size: 0.7rem; color: #888; margin-top: 6px; text-align: right; }
     </style>
 </head>
 <body>
 
-    <!-- Top Controls: Language + Dark Mode + Font Size -->
+    <!-- Top Controls -->
     <div class="top-controls">
         <select id="lang-select" class="lang-select" onchange="changeLanguage()">
             <option value="gu" selected>🌐 ગુજરાતી</option>
@@ -236,14 +244,16 @@
             </div>
         </div>
 
-        <!-- Live News -->
+        <!-- 🔥 LIVE NEWS (UPDATED) -->
         <div class="feature-card">
-            <div class="feature-title">📰 <span id="txt-news-title">તાજા કૃષિ સમાચાર</span></div>
-            <div class="news-badge">
-                📢 <b>હવામાન એલર્ટ:</b> ઉત્તર ગુજરાતમાં આગામી ૪૮ કલાકમાં હળવા ઝાપટાંની શક્યતા.
+            <div class="feature-title">📰 <span id="txt-news-title">તાજા કૃષિ સમાચાર (Live Agri News)</span></div>
+            <div id="live-news-container">
+                <div class="news-badge" style="text-align:center;">
+                    🔄 <b>તાજા સમાચાર લોડ થઈ રહ્યા છે...</b>
+                </div>
             </div>
-            <div class="news-badge" style="background-color:#fff3e0; border-left-color:#f57c00; color:#e65100;">
-                🚨 <b>રોગ સાવચેતી:</b> ભેજવાળા હવામાનમાં 'ટિક્કા' રોગનો ઉપદ્રવ વધવાની શક્યતા.
+            <div class="news-update-time">
+                🕐 અપડેટ: <span id="news-update-time"></span>
             </div>
         </div>
     </div>
@@ -296,27 +306,49 @@
         </div>
     </div>
 
-    <!-- 4️⃣ YOJNA -->
+    <!-- 4️⃣ YOJNA (UPDATED - Clickable) -->
     <div id="yojna-tab" class="tab-content">
         <div class="feature-card">
             <div class="feature-title">🏛️️ <span id="txt-yojna-title">સરકારી કૃષિ સહાય યોજનાઓ</span></div>
-            <div class="scheme-item">
-                <div class="scheme-title">૧. ટ્રેક્ટર અને સાધન સહાય</div>
+            <div style="font-size:0.85rem; color:#555; margin-bottom:10px;">
+                👆 દરેક યોજના પર <b>Click કરો</b> → સંપૂર્ણ માહિતી જુઓ
+            </div>
+            
+            <div class="scheme-item" onclick="openScheme('tractor')" style="cursor:pointer;">
+                <div class="scheme-title">🚜 ૧. ટ્રેક્ટર અને સાધન સહાય <span style="float:right; color:#2e7d32; font-size:0.8rem;">વિગતવાર →</span></div>
                 <div class="scheme-desc">૪૦% થી ૫૦% સુધીની સબસીડી.</div>
             </div>
-            <div class="scheme-item">
-                <div class="scheme-title">૨. તાર ફેન્સીંગ યોજના</div>
+            
+            <div class="scheme-item" onclick="openScheme('fencing')" style="cursor:pointer;">
+                <div class="scheme-title">🚧 ૨. તાર ફેન્સીંગ યોજના <span style="float:right; color:#2e7d32; font-size:0.8rem;">વિગતવાર →</span></div>
                 <div class="scheme-desc">જંગલી પ્રાણીઓથી રક્ષણ માટે સહાય.</div>
             </div>
-            <div class="scheme-item">
-                <div class="scheme-title">૩. સોલાર પંપ અને ડ્રીપ</div>
+            
+            <div class="scheme-item" onclick="openScheme('solar')" style="cursor:pointer;">
+                <div class="scheme-title">☀️ ૩. સોલાર પંપ અને ડ્રીપ <span style="float:right; color:#2e7d32; font-size:0.8rem;">વિગતવાર →</span></div>
                 <div class="scheme-desc">૭૫% સુધી સબસીડી.</div>
             </div>
-            <a href="https://ikhedut.gujarat.gov.in/" target="_blank" class="btn btn-ikhedut">🔗 i-Khedut Portal પર અરજી કરો</a>
+            
+            <div class="scheme-item" onclick="openScheme('kisan')" style="cursor:pointer;">
+                <div class="scheme-title">💰 ૪. પીએમ કિસાન સન્માન નિધિ <span style="float:right; color:#2e7d32; font-size:0.8rem;">વિગતવાર →</span></div>
+                <div class="scheme-desc">વાર્ષિક ₹૬,૦૦૦ સહાય.</div>
+            </div>
+            
+            <div class="scheme-item" onclick="openScheme('bima')" style="cursor:pointer;">
+                <div class="scheme-title">🛡️ ૫. પીએમ ફસલ બીમા યોજના <span style="float:right; color:#2e7d32; font-size:0.8rem;">વિગતવાર →</span></div>
+                <div class="scheme-desc">પાક નુકસાન પર વીમા કવચ.</div>
+            </div>
+            
+            <div class="scheme-item" onclick="openScheme('soil')" style="cursor:pointer;">
+                <div class="scheme-title">🌱 ૬. જમીન આરોગ્ય કાર્ડ <span style="float:right; color:#2e7d32; font-size:0.8rem;">વિગતવાર →</span></div>
+                <div class="scheme-desc">ફ્રી માટી પરીક્ષણ અને સલાહ.</div>
+            </div>
+            
+            <a href="https://ikhedut.gujarat.gov.in/" target="_blank" class="btn btn-ikhedut" style="margin-top:15px;">🔗 i-Khedut Portal પર અરજી કરો</a>
         </div>
     </div>
 
-    <!-- 5️⃣ FERTILIZER CALC (UPDATED) -->
+    <!-- 5️⃣ FERTILIZER CALC -->
     <div id="calc-tab" class="tab-content">
         <div class="feature-card">
             <div class="feature-title">🧪 <span id="txt-calc-title">ખાતર કેલ્ક્યુલેટર</span></div>
@@ -362,7 +394,7 @@
         </div>
     </div>
 
-    <!-- 7️⃣ HISTORY TAB (NEW) -->
+    <!-- 7️⃣ HISTORY TAB -->
     <div id="history-tab" class="tab-content">
         <div class="feature-card">
             <div class="feature-title">📚 <span>મારો સ્કેન ઇતિહાસ</span></div>
@@ -371,7 +403,7 @@
         </div>
     </div>
 
-    <!-- 8️⃣ FAQ TAB (NEW) -->
+    <!-- 8️⃣ FAQ TAB -->
     <div id="faq-tab" class="tab-content">
         <div class="feature-card">
             <div class="feature-title">❓ <span>વારંવાર પૂછાતા પ્રશ્નો (FAQ)</span></div>
@@ -407,7 +439,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Disease Modal -->
     <div id="info-modal" class="modal-overlay">
         <div class="modal-card">
             <div class="modal-header">
@@ -429,6 +461,17 @@
         </div>
     </div>
 
+    <!-- Scheme Details Modal (NEW) -->
+    <div id="scheme-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span id="scheme-modal-title">📋 યોજના વિગત</span>
+                <button class="close-btn" onclick="closeSchemeModal()">✕</button>
+            </div>
+            <div id="scheme-modal-content"></div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
     <button class="install-btn" id="install-btn" onclick="installPWA()">📱 એપ ઇન્સ્ટોલ કરો</button>
 
@@ -444,7 +487,6 @@
         let currentTopClass = "";
         let currentLang = "gu";
         let currentConfidence = 0;
-        let lastLocation = "થરાદ";
         let deferredPrompt = null;
 
         /* ============ THEME & FONT ============ */
@@ -493,8 +535,7 @@
             const locEl = document.getElementById("weather-location");
 
             try {
-                // Open-Meteo free API (no key needed)
-                let lat = 24.4, lon = 71.6; // default Tharad
+                let lat = 24.4, lon = 71.6;
                 try {
                     const pos = await new Promise((res, rej) => {
                         navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 });
@@ -531,7 +572,110 @@
             }
         }
         getLiveWeather();
-        setInterval(getLiveWeather, 600000); // દર 10 મિનિટે
+        setInterval(getLiveWeather, 600000);
+
+        /* ============ 🔥 LIVE NEWS GENERATOR (NEW) ============ */
+        function generateLiveNews() {
+            const container = document.getElementById("live-news-container");
+            const timeEl = document.getElementById("news-update-time");
+            if (!container) return;
+            
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const hour = now.getHours();
+            let newsList = [];
+            
+            // 🌦️ મોસમ આધારિત
+            if (month >= 6 && month <= 9) {
+                newsList.push({
+                    icon: "🌧️", title: "ચોમાસું એલર્ટ",
+                    msg: "ખરીફ પાકની વાવણી માટે યોગ્ય સમય. બીજને ટ્રાઇકોડર્માનો પટ આપો. વાવણી પહેલા ૫૦mm વરસાદ થવો જોઈએ.",
+                    color: "#e3f2fd"
+                });
+                newsList.push({
+                    icon: "🚨", title: "ટિક્કા રોગ ચેતવણી",
+                    msg: "ભેજવાળા હવામાનમાં મગફળીમાં 'ટિક્કા' રોગનો ઉપદ્રવ વધે છે. ૧૫ દિવસે મેન્કોઝેબનો છંટકાવ કરો.",
+                    color: "#fff3e0"
+                });
+            } else if (month >= 10 && month <= 2) {
+                newsList.push({
+                    icon: "❄️", title: "શિયાળુ પાક સલાહ",
+                    msg: "રવિ પાક (જીરું, રાયડો, ઘઉં) ની વાવણીનો સમય. ઠંડીથી બચાવવા રાત્રે પિયત આપો.",
+                    color: "#e3f2fd"
+                });
+                newsList.push({
+                    icon: "🌫️", title: "ઝાકળ એલર્ટ",
+                    msg: "વહેલી સવારે ઝાકળ પડે તો જીરામાં 'ચરમી' રોગનું જોખમ. ફૂગનાશકનો છંટકાવ કરો.",
+                    color: "#e0f2f1"
+                });
+            } else {
+                newsList.push({
+                    icon: "☀️", title: "ઉનાળુ પાક સલાહ",
+                    msg: "ઉનાળુ મગફળી, બાજરીની વાવણીનો સમય. દર ૭-૧૦ દિવસે પિયત આપો. ચુસિયા જીવાત પર ધ્યાન.",
+                    color: "#fff3e0"
+                });
+                newsList.push({
+                    icon: "💧", title: "પિયત ચેતવણી",
+                    msg: "તાપમાન વધુ હોવાથી બપોરે પિયત ન આપો. સવારે ૬-૯ અથવા સાંજે ૫-૭ વાગ્યે આપો.",
+                    color: "#e3f2fd"
+                });
+            }
+            
+            // ⏰ સમય આધારિત
+            if (hour >= 5 && hour < 10) {
+                newsList.push({
+                    icon: "🌅", title: "સવારની સલાહ",
+                    msg: "આ સમય છંટકાવ માટે શ્રેષ્ઠ છે. જંતુનાશકની અસર વધુ થાય છે. પવન ઓછો હોય તો છંટકાવ કરો.",
+                    color: "#e8f5e9"
+                });
+            } else if (hour >= 10 && hour < 16) {
+                newsList.push({
+                    icon: "🔥", title: "બપોરની ચેતવણી",
+                    msg: "તીવ્ર તાપમાનમાં છંટકાવ ન કરો - દવા બળી જાય છે અને પાન બગડે છે. સાંજ સુધી રાહ જુઓ.",
+                    color: "#ffebee"
+                });
+            } else if (hour >= 16 && hour < 20) {
+                newsList.push({
+                    icon: "🌇", title: "સાંજની સલાહ",
+                    msg: "સાંજે છંટકાવ માટે યોગ્ય સમય. જીવાત સક્રિય હોય છે. ૨-૩ કલાક પછી પિયત આપો.",
+                    color: "#fff3e0"
+                });
+            }
+            
+            // 📅 મહિના આધારિત
+            if (month === 6 || month === 7) {
+                newsList.push({
+                    icon: "🌱", title: "ખરીફ વાવણી",
+                    msg: "મગફળીની વાવણી માટે ૨૫-૩૦°C તાપમાન શ્રેષ્ઠ. વાવણી પહેલા બીજ ૩-૪ કલાક ધૂપમાં સુકવો.",
+                    color: "#e8f5e9"
+                });
+            }
+            if (month === 10 || month === 11) {
+                newsList.push({
+                    icon: "🌾", title: "કાપણી સમય",
+                    msg: "મગફળીની કાપણી માટે યોગ્ય સમય. પાન પીળા થાય અને શીંગોમાંથી અવાજ આવે ત્યારે કાપો.",
+                    color: "#fff9c4"
+                });
+            }
+            if (month === 3 || month === 4) {
+                newsList.push({
+                    icon: "🐛", title: "જીવાત ચેતવણી",
+                    msg: "ઉનાળામાં લશ્કરી ઈયળ અને થ્રિપ્સનો ઉપદ્રવ વધે છે. નિયમિત નિરીક્ષણ કરો.",
+                    color: "#ffebee"
+                });
+            }
+            
+            container.innerHTML = newsList.map(n => `
+                <div class="news-badge" style="background-color:${n.color}; border-left-color:#1976d2; margin-top:8px; color:#0d47a1;">
+                    <b>${n.icon} ${n.title}:</b> ${n.msg}
+                </div>
+            `).join('');
+            
+            if (timeEl) {
+                timeEl.innerText = now.toLocaleDateString('gu-IN') + " " + now.toLocaleTimeString('gu-IN', {hour:'2-digit', minute:'2-digit'});
+            }
+        }
+        setInterval(generateLiveNews, 3600000);
 
         /* ============ APMC RATES ============ */
         const apmcRates = {
@@ -695,7 +839,7 @@
                 mentorBadge: "👨‍🏫 માર્ગદર્શક:",
                 student1Badge: "👨‍🎓 વિદ્યાર્થી ૧:",
                 student2Badge: "👨‍🎓 વિદ્યાર્થી ૨:",
-                newsTitle: "તાજા કૃષિ સમાચાર",
+                newsTitle: "તાજા કૃષિ સમાચાર (Live Agri News)",
                 weatherTitle: "હવામાન સલાહ (Live Weather)",
                 calcTitle: "ખાતર કેલ્ક્યુલેટર",
                 calcBtn: "ગણતરી કરો",
@@ -892,6 +1036,317 @@
             }
         };
 
+        /* ============ 🏛️ SCHEME DETAILS DATA (NEW) ============ */
+        const schemeData = {
+            tractor: {
+                title: "🚜 ટ્રેક્ટર અને સાધન સહાય યોજના",
+                details: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📋 યોજના શું છે?</div>
+                        <div class="modal-text">ખેડૂતોને ટ્રેક્ટર, પાવર ટિલર, રોટાવેટર, સીડ ડ્રિલ, થ્રેશર જેવા કૃષિ સાધનોની ખરીદી પર સરકાર ૪૦% થી ૫૦% સુધીની સબસીડી આપે છે.</div>
+                    </div>
+                    <div class="modal-section" style="background:#e3f2fd; border-left-color:#1976d2;">
+                        <div class="modal-section-title" style="color:#0d47a1;">💰 કેટલી સબસીડી?</div>
+                        <div class="modal-text">• ટ્રેક્ટર (૨૦ HP સુધી): ૪૦% સબસીડી (₹૧.૫ લાખ સુધી)<br>
+                        • ટ્રેક્ટર (૨૦-૪૦ HP): ૩૫% સબસીડી<br>
+                        • પાવર ટિલર: ૫૦% સબસીડી (₹૭૫,૦૦૦ સુધી)<br>
+                        • સીડ ડ્રિલ/રોટાવેટર: ૫૦% સબસીડી</div>
+                    </div>
+                    <div class="modal-section" style="background:#fff3e0; border-left-color:#f57c00;">
+                        <div class="modal-section-title" style="color:#e65100;">✅ કોને લાભ મળે?</div>
+                        <div class="modal-text">• ગુજરાતના રહેવાસી ખેડૂત<br>
+                        • જમીન ધારક (૭/૧૨ કે ૮-અ)<br>
+                        • ૧૮ વર્ષથી ઉપરની ઉંમર<br>
+                        • એક પરિવારમાં એક જ વ્યક્તિ</div>
+                    </div>
+                    <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                        <div class="modal-section-title" style="color:#004d40;">📄 જરૂરી દસ્તાવેજ</div>
+                        <div class="modal-text">૧. આધાર કાર્ડ<br>
+                        ૨. જમીનના ૭/૧૨ દસ્તાવેજ<br>
+                        ૩. બેંક પાસબુક<br>
+                        ૪. પાસપોર્ટ સાઇઝ ફોટો<br>
+                        ૫. જાતિ પ્રમાણપત્ર (લાગુ હોય તો)<br>
+                        ૬. આવક પ્રમાણપત્ર</div>
+                    </div>
+                    <div class="modal-section" style="background:#f3e5f5; border-left-color:#6a1b9a;">
+                        <div class="modal-section-title" style="color:#4a148c;">📝 અરજી કરવાની રીત</div>
+                        <div class="modal-text">૧. <b>ikhedut.gujarat.gov.in</b> ખોલો<br>
+                        ૨. "યોજનાઓ" → "કૃષિ" → "ટ્રેક્ટર સહાય" પસંદ કરો<br>
+                        ૩. આધાર નંબર નાખો<br>
+                        ૪. OTP થી લોગિન કરો<br>
+                        ૫. ફોર્મ ભરો + દસ્તાવેજ અપલોડ કરો<br>
+                        ૬. સબમિટ કરો<br>
+                        ૭. અરજી નંબર સેવ કરો</div>
+                    </div>
+                    <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                        <div class="modal-section-title" style="color:#1b5e20;">📞 સંપર્ક</div>
+                        <div class="modal-text">• i-Khedut હેલ્પલાઇન: 1800-180-1551<br>
+                        • નજીકનું કૃષિ સેવા કેન્દ્ર<br>
+                        • તાલુકા કૃષિ અધિકારી</div>
+                    </div>
+                `
+            },
+            fencing: {
+                title: "🚧 તાર ફેન્સીંગ યોજના",
+                details: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📋 યોજના શું છે?</div>
+                        <div class="modal-text">જંગલી પ્રાણીઓ (નીલગાય, વરુ, જંગલી ભુંડ) થી પાકને બચાવવા માટે ખેતરની ચારે બાજુ તારની વાડ (Chain Link Fencing) બનાવવા માટે સરકાર સહાય આપે છે.</div>
+                    </div>
+                    <div class="modal-section" style="background:#e3f2fd; border-left-color:#1976d2;">
+                        <div class="modal-section-title" style="color:#0d47a1;">💰 કેટલી સબસીડી?</div>
+                        <div class="modal-text">• ૫૦% સબસીડી (₹૬૦,૦૦૦ સુધી)<br>
+                        • ૧ હેક્ટર સુધીના ખેતર માટે<br>
+                        • SC/ST ખેડૂતોને ૬૦% સબસીડી<br>
+                        • લઘુ ખેડૂતોને પ્રાથમિકતા</div>
+                    </div>
+                    <div class="modal-section" style="background:#fff3e0; border-left-color:#f57c00;">
+                        <div class="modal-section-title" style="color:#e65100;">✅ કોને લાભ મળે?</div>
+                        <div class="modal-text">• ગુજરાતના ખેડૂત<br>
+                        • જંગલી પ્રાણીઓથી પ્રભાવિત વિસ્તાર<br>
+                        • બનાસકાંઠા, સાબરકાંઠા, દાહોદ જિલ્લાને પ્રાથમિકતા</div>
+                    </div>
+                    <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                        <div class="modal-section-title" style="color:#004d40;">📄 જરૂરી દસ્તાવેજ</div>
+                        <div class="modal-text">૧. આધાર કાર્ડ<br>
+                        ૨. ૭/૧૨ દસ્તાવેજ<br>
+                        ૩. ખેતરનો નકશો<br>
+                        ૪. બેંક પાસબુક<br>
+                        ૫. ફોટો<br>
+                        ૬. જંગલી પ્રાણી નુકસાન પ્રમાણપત્ર (તાલુકા કચેરી થી)</div>
+                    </div>
+                    <div class="modal-section" style="background:#f3e5f5; border-left-color:#6a1b9a;">
+                        <div class="modal-section-title" style="color:#4a148c;">📝 અરજી કરવાની રીત</div>
+                        <div class="modal-text">૧. ikhedut.gujarat.gov.in ખોલો<br>
+                        ૨. "કૃષિ" → "તાર ફેન્સીંગ" પસંદ કરો<br>
+                        ૩. આધાર + OTP થી લોગિન<br>
+                        ૪. ખેતરની વિગત ભરો<br>
+                        ૫. દસ્તાવેજ અપલોડ કરો<br>
+                        ૬. સબમિટ કરો</div>
+                    </div>
+                    <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                        <div class="modal-section-title" style="color:#1b5e20;">📞 સંપર્ક</div>
+                        <div class="modal-text">• i-Khedut: 1800-180-1551<br>
+                        • વન વિભાગ સંપર્ક<br>
+                        • તાલુકા કૃષિ અધિકારી</div>
+                    </div>
+                `
+            },
+            solar: {
+                title: "☀️ સોલાર પંપ અને ડ્રીપ ઇરિગેશન",
+                details: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📋 યોજના શું છે?</div>
+                        <div class="modal-text">ખેડૂતોને સૌર ઊર્જા આધારિત પાણીના પંપ (Solar Pump) અને ટપક સિંચાઈ પદ્ધતિ (Drip Irrigation) ની સ્થાપના માટે ૭૫% સુધી સબસીડી આપવામાં આવે છે.</div>
+                    </div>
+                    <div class="modal-section" style="background:#e3f2fd; border-left-color:#1976d2;">
+                        <div class="modal-section-title" style="color:#0d47a1;">💰 કેટલી સબસીડી?</div>
+                        <div class="modal-text">• સોલાર પંપ (૧ HP): ૭૫% (₹૫૦,૦૦૦)<br>
+                        • સોલાર પંપ (૩ HP): ૭૦% (₹૧,૨૫,૦૦૦)<br>
+                        • સોલાર પંપ (૫ HP): ૬૫% (₹૨,૦૦,૦૦૦)<br>
+                        • ડ્રીપ: ૫૦% (₹૪૫,૦૦૦/હેક્ટર)<br>
+                        • સ્પ્રિંકલર: ૫૦%</div>
+                    </div>
+                    <div class="modal-section" style="background:#fff3e0; border-left-color:#f57c00;">
+                        <div class="modal-section-title" style="color:#e65100;">✅ ફાયદા શું છે?</div>
+                        <div class="modal-text">• વીજળી બિલમાં બચત (₹૧૫,૦૦૦/વર્ષ)<br>
+                        • ૫૦% પાણીની બચત<br>
+                        • ૪૦% વધુ ઉત્પાદન<br>
+                        • નીંદણ ઓછું<br>
+                        • રાત-દિવસ પિયત શક્ય</div>
+                    </div>
+                    <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                        <div class="modal-section-title" style="color:#004d40;">📄 જરૂરી દસ્તાવેજ</div>
+                        <div class="modal-text">૧. આધાર કાર્ડ<br>
+                        ૨. ૭/૧૨ દસ્તાવેજ<br>
+                        ૩. બેંક પાસબુક<br>
+                        ૪. પાસપોર્ટ ફોટો<br>
+                        ૫. વીજ બિલ (લાગુ હોય તો)<br>
+                        ૬. જમીનનો નકશો</div>
+                    </div>
+                    <div class="modal-section" style="background:#f3e5f5; border-left-color:#6a1b9a;">
+                        <div class="modal-section-title" style="color:#4a148c;">📝 અરજી રીત</div>
+                        <div class="modal-text">૧. ikhedut.gujarat.gov.in ખોલો<br>
+                        ૨. "ડ્રીપ સિંચાઈ" કે "સોલાર પંપ"<br>
+                        ૩. આધાર + OTP લોગિન<br>
+                        ૪. જમીન વિગત + ફોટો<br>
+                        ૫. બેંક વિગત<br>
+                        ૬. સબમિટ કરો<br>
+                        ૭. મંજૂરી પછી વેન્ડર પસંદ કરો</div>
+                    </div>
+                    <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                        <div class="modal-section-title" style="color:#1b5e20;">📞 સંપર્ક</div>
+                        <div class="modal-text">• i-Khedut: 1800-180-1551<br>
+                        • GEDA (ગુજરાત એનર્જી): 079-23257834<br>
+                        • નજીકનું કૃષિ સેવા કેન્દ્ર</div>
+                    </div>
+                `
+            },
+            kisan: {
+                title: "💰 પીએમ કિસાન સન્માન નિધિ",
+                details: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📋 યોજના શું છે?</div>
+                        <div class="modal-text">નાના અને સીમાંત ખેડૂતોને વાર્ષિક ₹૬,૦૦૦ નાણાકીય સહાય ૩ હપ્તામાં (₹૨,૦૦૦ દર ૪ મહિને) સીધી બેંક ખાતામાં મળે છે.</div>
+                    </div>
+                    <div class="modal-section" style="background:#e3f2fd; border-left-color:#1976d2;">
+                        <div class="modal-section-title" style="color:#0d47a1;">💰 કેટલી સહાય?</div>
+                        <div class="modal-text">• વાર્ષિક: ₹૬,૦૦૦<br>
+                        • ૩ હપ્તા: ₹૨,૦૦૦ દરેક<br>
+                        • ડાયરેક્ટ બેંક ટ્રાન્સફર (DBT)<br>
+                        • ૨ હેક્ટર સુધીની જમીન ધારકો</div>
+                    </div>
+                    <div class="modal-section" style="background:#fff3e0; border-left-color:#f57c00;">
+                        <div class="modal-section-title" style="color:#e65100;">✅ કોને લાભ મળે?</div>
+                        <div class="modal-text">• બધા ખેડૂત પરિવારો<br>
+                        • ૨ હેક્ટર સુધીની જમીન<br>
+                        • ૧૮ વર્ષથી ઉપર<br>
+                        • આધાર લિંક બેંક ખાતું<br>
+                        • દેશભરમાં લાગુ</div>
+                    </div>
+                    <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                        <div class="modal-section-title" style="color:#004d40;">📄 જરૂરી દસ્તાવેજ</div>
+                        <div class="modal-text">૧. આધાર કાર્ડ<br>
+                        ૨. ૭/૧૨ કે ૮-અ<br>
+                        ૩. બેંક પાસબુક (આધાર લિંક)<br>
+                        ૪. મોબાઇલ નંબર<br>
+                        ૫. પાસપોર્ટ ફોટો</div>
+                    </div>
+                    <div class="modal-section" style="background:#f3e5f5; border-left-color:#6a1b9a;">
+                        <div class="modal-section-title" style="color:#4a148c;">📝 અરજી રીત</div>
+                        <div class="modal-text">૧. pmkisan.gov.in ખોલો<br>
+                        ૨. "New Farmer Registration"<br>
+                        ૩. આધાર નંબર નાખો<br>
+                        ૪. OTP થી લોગિન<br>
+                        ૫. ફોર્મ ભરો<br>
+                        ૬. ૭/૧૨ અપલોડ કરો<br>
+                        ૭. તાલુકા કચેરીમાં વેરિફિકેશન<br>
+                        ૮. રજિસ્ટ્રેશન નંબર સેવ કરો</div>
+                    </div>
+                    <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                        <div class="modal-section-title" style="color:#1b5e20;">📞 સંપર્ક</div>
+                        <div class="modal-text">• PM-KISAN હેલ્પલાઇન: 155261<br>
+                        • 1800-115-526 (Toll Free)<br>
+                        • તાલુકા કૃષિ અધિકારી<br>
+                        • pmkisan.gov.in</div>
+                    </div>
+                `
+            },
+            bima: {
+                title: "🛡️ પીએમ ફસલ બીમા યોજના",
+                details: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📋 યોજના શું છે?</div>
+                        <div class="modal-text">કુદરતી આફત (વરસાદ, દુષ્કાળ, જીવાત, રોગ) ના કારણે પાક નુકસાન થાય તો ખેડૂતને નાણાકીય વળતર મળે તેવી સરકારી વીમા યોજના.</div>
+                    </div>
+                    <div class="modal-section" style="background:#e3f2fd; border-left-color:#1976d2;">
+                        <div class="modal-section-title" style="color:#0d47a1;">💰 પ્રીમિયમ કેટલું?</div>
+                        <div class="modal-text">• ખરીફ પાક: ૨% (ખેડૂતનો હિસ્સો)<br>
+                        • રવિ પાક: ૧.૫%<br>
+                        • જાયદ પાક: ૫%<br>
+                        • બાકી રકમ સરકાર આપે<br>
+                        • ઉદા: ₹૧,૦૦,૦૦૦ વીમા → ₹૨,૦૦૦ પ્રીમિયમ</div>
+                    </div>
+                    <div class="modal-section" style="background:#fff3e0; border-left-color:#f57c00;">
+                        <div class="modal-section-title" style="color:#e65100;">✅ કયા પાક ને?</div>
+                        <div class="modal-text">• મગફળી, કપાસ, બાજરી<br>
+                        • ઘઉં, જીરું, રાયડો<br>
+                        • તલ, ગુવાર, મગ<br>
+                        • રાજ્યના ૭૦+ પાક સામેલ</div>
+                    </div>
+                    <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                        <div class="modal-section-title" style="color:#004d40;">📄 જરૂરી દસ્તાવેજ</div>
+                        <div class="modal-text">૧. આધાર કાર્ડ<br>
+                        ૨. ૭/૧૨ દસ્તાવેજ<br>
+                        ૩. બેંક પાસબુક<br>
+                        ૪. વાવેતરનો ફોટો<br>
+                        ૫. બીજની ખરીદી રસીદ<br>
+                        ૬. પાક વાવેતર પ્રમાણપત્ર</div>
+                    </div>
+                    <div class="modal-section" style="background:#f3e5f5; border-left-color:#6a1b9a;">
+                        <div class="modal-section-title" style="color:#4a148c;">📝 અરજી રીત</div>
+                        <div class="modal-text">૧. pmfby.gov.in ખોલો<br>
+                        ૨. "Farmer Corner" → "Apply"<br>
+                        ૩. રાજ્ય, જિલ્લો, તાલુકો પસંદ કરો<br>
+                        ૪. પાક + વિસ્તાર નાખો<br>
+                        ૫. આધાર + OTP<br>
+                        ૬. પ્રીમિયમ ભરો (ઓનલાઇન)<br>
+                        ૭. નુકસાન થાય તો ૭૨ કલાકમાં જાણ કરો</div>
+                    </div>
+                    <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                        <div class="modal-section-title" style="color:#1b5e20;">📞 સંપર્ક</div>
+                        <div class="modal-text">• PMFBY હેલ્પલાઇન: 1800-180-1551<br>
+                        • 14447 (Toll Free)<br>
+                        • તાલુકા કૃષિ અધિકારી<br>
+                        • નજીકની બેંક</div>
+                    </div>
+                `
+            },
+            soil: {
+                title: "🌱 જમીન આરોગ્ય કાર્ડ યોજના",
+                details: `
+                    <div class="modal-section">
+                        <div class="modal-section-title">📋 યોજના શું છે?</div>
+                        <div class="modal-text">ખેડૂતોની જમીનનું ફ્રી પરીક્ષણ કરીને તેમાં રહેલા પોષક તત્વો (N-P-K, સૂક્ષ્મ તત્વો) ની માહિતી આપતું કાર્ડ. જેથી યોગ્ય ખાતરનો ઉપયોગ થાય.</div>
+                    </div>
+                    <div class="modal-section" style="background:#e3f2fd; border-left-color:#1976d2;">
+                        <div class="modal-section-title" style="color:#0d47a1;">💰 શું મળે?</div>
+                        <div class="modal-text">• ૧૨ પોષક તત્વોની માહિતી<br>
+                        • ફ્રી માટી પરીક્ષણ<br>
+                        • ખાતરની ભલામણ<br>
+                        • ઓનલાઇન ડિજિટલ કાર્ડ<br>
+                        • દર ૩ વર્ષે રિન્યુ</div>
+                    </div>
+                    <div class="modal-section" style="background:#fff3e0; border-left-color:#f57c00;">
+                        <div class="modal-section-title" style="color:#e65100;">✅ ફાયદા</div>
+                        <div class="modal-text">• ૧૦-૨૦% ખાતરમાં બચત<br>
+                        • ૮-૧૦% વધુ ઉત્પાદન<br>
+                        • જમીનની ગુણવત્તા સુધરે<br>
+                        • યોગ્ય પોષણ મળે</div>
+                    </div>
+                    <div class="modal-section" style="background:#e0f2f1; border-left-color:#00695c;">
+                        <div class="modal-section-title" style="color:#004d40;">📄 જરૂરી દસ્તાવેજ</div>
+                        <div class="modal-text">૧. આધાર કાર્ડ<br>
+                        ૨. ૭/૧૨ દસ્તાવેજ<br>
+                        ૩. મોબાઇલ નંબર<br>
+                        ૪. જમીનનો નમૂનો (૫૦૦ ગ્રામ)</div>
+                    </div>
+                    <div class="modal-section" style="background:#f3e5f5; border-left-color:#6a1b9a;">
+                        <div class="modal-section-title" style="color:#4a148c;">📝 પ્રક્રિયા</div>
+                        <div class="modal-text">૧. soilhealth.dac.gov.in ખોલો<br>
+                        ૨. "Soil Health Card" પસંદ કરો<br>
+                        ૩. રાજ્ય/જિલ્લો/ગામ પસંદ કરો<br>
+                        ૪. ખેડૂતની વિગત ભરો<br>
+                        ૫. જમીનનો નમૂનો લો<br>
+                        ૬. નજીકની લેબમાં આપો<br>
+                        ૭. ૧૫-૩૦ દિવસમાં કાર્ડ મળે<br>
+                        ૮. SMS થી જાણ થાય</div>
+                    </div>
+                    <div class="modal-section" style="background:#e8f5e9; border-left-color:#2e7d32;">
+                        <div class="modal-section-title" style="color:#1b5e20;">📞 સંપર્ક</div>
+                        <div class="modal-text">• કૃષિ વિભાગ હેલ્પલાઇન: 1800-180-1551<br>
+                        • નજીકની માટી લેબ<br>
+                        • તાલુકા કૃષિ અધિકારી<br>
+                        • soilhealth.dac.gov.in</div>
+                    </div>
+                `
+            }
+        };
+
+        /* ============ SCHEME MODAL FUNCTIONS (NEW) ============ */
+        function openScheme(schemeKey) {
+            const scheme = schemeData[schemeKey];
+            if (!scheme) return;
+            
+            document.getElementById("scheme-modal-title").innerText = scheme.title;
+            document.getElementById("scheme-modal-content").innerHTML = scheme.details;
+            document.getElementById("scheme-modal").style.display = "flex";
+        }
+
+        function closeSchemeModal() {
+            document.getElementById("scheme-modal").style.display = "none";
+        }
+
         /* ============ LANGUAGE ============ */
         function changeLanguage() {
             currentLang = document.getElementById("lang-select").value;
@@ -925,6 +1380,7 @@
 
             if (currentTopClass !== "") updateOutputCards();
             if (document.getElementById("vigha-input").value) calculateFertilizer();
+            generateLiveNews();
         }
 
         function getDiseaseInfo(className) {
@@ -998,7 +1454,6 @@
                 imgElement.src = e.target.result;
                 imgElement.style.display = "block";
                 
-                // LOADING ANIMATION
                 document.getElementById("results-title").style.display = "block";
                 labelContainer = document.getElementById("label-container");
                 labelContainer.innerHTML = `
@@ -1074,7 +1529,6 @@
             const t = translations[currentLang];
             const data = getDiseaseInfo(currentTopClass);
 
-            // ACCURACY WARNING
             let accuracyNote = "";
             if (currentConfidence < 60) {
                 accuracyNote = `<div style="background:#fff3e0; padding:8px; border-radius:6px; margin-bottom:8px; color:#e65100; font-size:0.85rem;">⚠️ AI ને ફક્ત ${currentConfidence}% ખાતરી છે. નિષ્ણાતની સલાહ લેવી સારી.</div>`;
@@ -1137,7 +1591,6 @@
             msg += `🛡️ *બચાવ:* ${data.prevention}\n\n`;
             msg += `🏫 *આંતરોલ પ્રાથમિક શાળા*`;
 
-            // Web Share API with photo (mobile only)
             if (navigator.share && previewImg.src && previewImg.style.display !== "none") {
                 try {
                     const response = await fetch(previewImg.src);
@@ -1151,117 +1604,111 @@
                         });
                         return;
                     }
-                } catch(e) { /* fallback */ }
+                } catch(e) { }
             }
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
         }
-/* ============ PDF REPORT (English) - FIXED ============ */
-function downloadPDF() {
-    if (!currentTopClass) { showToast("પહેલા સ્કેન કરો"); return; }
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    
-    // ⭐ નાના-મોટા અક્ષરો ignore કરો
-    const cls = (currentTopClass || "").toLowerCase();
-    
-    let diseaseEn = "Unknown Disease";
-    let treatmentEn = "Inspect crop and use suitable pesticide as per expert advice.";
-    let preventionEn = "- Regular field visits\n- Consult agriculture expert\n- Use certified seeds";
-    
-    if (cls.includes("healthy")) {
-        diseaseEn = "Healthy Leaf";
-        treatmentEn = "Crop is healthy. No treatment needed. Continue regular monitoring.";
-        preventionEn = "- Timely irrigation\n- Balanced NPK fertilizer\n- Regular field monitoring\n- Organic compost for soil health";
-    } else if (cls.includes("tikka")) {
-        diseaseEn = "Tikka (Leaf Spot) Disease";
-        treatmentEn = "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) in 10 liters water. Spray in early morning or late evening.";
-        preventionEn = "- Seed treatment before sowing with Trichoderma\n- Practice crop rotation\n- Remove infected leaves from field\n- Maintain proper plant spacing";
-    } else if (cls.includes("rust")) {
-        diseaseEn = "Rust Disease";
-        treatmentEn = "Spray Tebuconazole or Hexaconazole fungicide on affected crop. Repeat after 15 days if needed.";
-        preventionEn = "- Use resistant varieties\n- Maintain proper plant spacing\n- Reduce excess Urea (Nitrogen) usage\n- Regular field monitoring";
-    } else if (cls.includes("alternaria")) {
-        diseaseEn = "Alternaria Blight";
-        treatmentEn = "Spray Copper Oxychloride 50% WP (30g) in 15 liters water. Remove affected leaves.";
-        preventionEn = "- Avoid excess Nitrogen fertilizer\n- Remove affected leaves from field\n- Use certified seeds only\n- Ensure proper drainage";
-    }
-    
-    // ===== HEADER =====
-    doc.setFillColor(27, 94, 32);
-    doc.rect(0, 0, 210, 32, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(18);
-    doc.setFont(undefined, 'bold');
-    doc.text("AI Khedut Mitra - Crop Report", 105, 15, { align: 'center' });
-    doc.setFontSize(10);
-    doc.setFont(undefined, 'normal');
-    doc.text("Antrol Primary School, Tharad, Gujarat", 105, 25, { align: 'center' });
 
-    doc.setTextColor(0, 0, 0);
-    let y = 48;
+        /* ============ PDF REPORT (English - FIXED) ============ */
+        function downloadPDF() {
+            if (!currentTopClass) { showToast("પહેલા સ્કેન કરો"); return; }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const cls = (currentTopClass || "").toLowerCase();
+            
+            let diseaseEn = "Unknown Disease";
+            let treatmentEn = "Inspect crop and use suitable pesticide as per expert advice.";
+            let preventionEn = "- Regular field visits\n- Consult agriculture expert\n- Use certified seeds";
+            
+            if (cls.includes("healthy")) {
+                diseaseEn = "Healthy Leaf";
+                treatmentEn = "Crop is healthy. No treatment needed. Continue regular monitoring.";
+                preventionEn = "- Timely irrigation\n- Balanced NPK fertilizer\n- Regular field monitoring\n- Organic compost for soil health";
+            } else if (cls.includes("tikka")) {
+                diseaseEn = "Tikka (Leaf Spot) Disease";
+                treatmentEn = "Spray Mancozeb 75% WP (27g) or Carbendazim (10g) in 10 liters water. Spray in early morning or late evening.";
+                preventionEn = "- Seed treatment before sowing with Trichoderma\n- Practice crop rotation\n- Remove infected leaves from field\n- Maintain proper plant spacing";
+            } else if (cls.includes("rust")) {
+                diseaseEn = "Rust Disease";
+                treatmentEn = "Spray Tebuconazole or Hexaconazole fungicide on affected crop. Repeat after 15 days if needed.";
+                preventionEn = "- Use resistant varieties\n- Maintain proper plant spacing\n- Reduce excess Urea (Nitrogen) usage\n- Regular field monitoring";
+            } else if (cls.includes("alternaria")) {
+                diseaseEn = "Alternaria Blight";
+                treatmentEn = "Spray Copper Oxychloride 50% WP (30g) in 15 liters water. Remove affected leaves.";
+                preventionEn = "- Avoid excess Nitrogen fertilizer\n- Remove affected leaves from field\n- Use certified seeds only\n- Ensure proper drainage";
+            }
+            
+            doc.setFillColor(27, 94, 32);
+            doc.rect(0, 0, 210, 32, 'F');
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text("AI Khedut Mitra - Crop Report", 105, 15, { align: 'center' });
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text("Antrol Primary School, Tharad, Gujarat", 105, 25, { align: 'center' });
 
-    // ===== DISEASE INFO =====
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.setTextColor(200, 40, 40);
-    doc.text("Disease Detected: " + diseaseEn, 15, y); 
-    y += 10;
-    
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    doc.setTextColor(0, 0, 0);
-    doc.text("AI Accuracy: " + currentConfidence + "%", 15, y); 
-    y += 7;
-    doc.text("Date: " + new Date().toLocaleString('en-IN'), 15, y); 
-    y += 14;
+            doc.setTextColor(0, 0, 0);
+            let y = 48;
 
-    // ===== TREATMENT =====
-    doc.setFontSize(13);
-    doc.setFont(undefined, 'bold');
-    doc.setTextColor(27, 94, 32);
-    doc.text("Treatment / Remedy:", 15, y); 
-    y += 8;
-    
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    doc.setTextColor(0, 0, 0);
-    const treatLines = doc.splitTextToSize(treatmentEn, 180);
-    doc.text(treatLines, 15, y); 
-    y += treatLines.length * 6 + 10;
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(200, 40, 40);
+            doc.text("Disease Detected: " + diseaseEn, 15, y); 
+            y += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            doc.text("AI Accuracy: " + currentConfidence + "%", 15, y); 
+            y += 7;
+            doc.text("Date: " + new Date().toLocaleString('en-IN'), 15, y); 
+            y += 14;
 
-    // ===== PREVENTION =====
-    doc.setFontSize(13);
-    doc.setFont(undefined, 'bold');
-    doc.setTextColor(0, 105, 92);
-    doc.text("Future Prevention:", 15, y); 
-    y += 8;
-    
-    doc.setFontSize(11);
-    doc.setFont(undefined, 'normal');
-    doc.setTextColor(0, 0, 0);
-    const prevLines = doc.splitTextToSize(preventionEn, 180);
-    doc.text(prevLines, 15, y); 
-    y += prevLines.length * 6 + 12;
+            doc.setFontSize(13);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(27, 94, 32);
+            doc.text("Treatment / Remedy:", 15, y); 
+            y += 8;
+            
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            const treatLines = doc.splitTextToSize(treatmentEn, 180);
+            doc.text(treatLines, 15, y); 
+            y += treatLines.length * 6 + 10;
 
-    // ===== CONTACT BOX =====
-    doc.setFillColor(232, 245, 233);
-    doc.rect(10, y, 190, 22, 'F');
-    doc.setFontSize(12);
-    doc.setFont(undefined, 'bold');
-    doc.setTextColor(27, 94, 32);
-    doc.text("Kisan Call Center: 1800-180-1551 (Toll Free)", 15, y + 14);
+            doc.setFontSize(13);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(0, 105, 92);
+            doc.text("Future Prevention:", 15, y); 
+            y += 8;
+            
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(0, 0, 0);
+            const prevLines = doc.splitTextToSize(preventionEn, 180);
+            doc.text(prevLines, 15, y); 
+            y += prevLines.length * 6 + 12;
 
-    // ===== FOOTER =====
-    doc.setFontSize(9);
-    doc.setTextColor(120, 120, 120);
-    doc.setFont(undefined, 'normal');
-    doc.text("Generated by AI Khedut Mitra App", 105, 282, { align: 'center' });
-    doc.text("Antrol Primary School - Tharad, Gujarat", 105, 288, { align: 'center' });
+            doc.setFillColor(232, 245, 233);
+            doc.rect(10, y, 190, 22, 'F');
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.setTextColor(27, 94, 32);
+            doc.text("Kisan Call Center: 1800-180-1551 (Toll Free)", 15, y + 14);
 
-    doc.save('crop-report-${Date.now()}.pdf');
-    showToast("📄 PDF ડાઉનલોડ થયો!");
-}
-       
+            doc.setFontSize(9);
+            doc.setTextColor(120, 120, 120);
+            doc.setFont(undefined, 'normal');
+            doc.text("Generated by AI Khedut Mitra App", 105, 282, { align: 'center' });
+            doc.text("Antrol Primary School - Tharad, Gujarat", 105, 288, { align: 'center' });
+
+            doc.save("crop-report-" + Date.now() + ".pdf");
+            showToast("📄 PDF ડાઉનલોડ થયો!");
+        }
+
         /* ============ HISTORY ============ */
         function saveToHistory(disease, confidence) {
             if (!disease) return;
@@ -1275,7 +1722,7 @@ function downloadPDF() {
                     image: imgData
                 });
                 localStorage.setItem('scanHistory', JSON.stringify(history.slice(0, 20)));
-            } catch(e) { /* storage full */ }
+            } catch(e) { }
         }
 
         function renderHistory() {
@@ -1337,21 +1784,21 @@ function downloadPDF() {
                 });
             }
         }
-        // Service Worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(() => {});
         }
 
         /* ============ INIT ============ */
-        window.onload = function() {
+        window.addEventListener('load', function() {
             showMarketRates();
-            // Set today's APMC update time
+            generateLiveNews();
+            
             const el = document.getElementById("apmc-update-time");
             if (el) {
                 const d = new Date();
                 el.innerText = d.toLocaleDateString('gu-IN') + " " + d.toLocaleTimeString('gu-IN', {hour:'2-digit', minute:'2-digit'});
             }
-        };
+        });
     </script>
 </body>
 </html>
